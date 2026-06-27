@@ -1,0 +1,31 @@
+{
+  "name": "e-commerce-project",
+  "version": "1.0.0",
+  "description": "E-commerce full-stack project (without payments)",
+  "keywords": [
+    "e-commerce",
+    "full-stack"
+  ],
+  "license": "ISC",
+  "author": "Kkamildev",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mysql2": "^3.22.5",
+    "sequelize": "^6.37.8",
+    "sequelize-typescript": "^2.1.6"
+  }
+}
