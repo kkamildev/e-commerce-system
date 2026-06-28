@@ -1,0 +1,47 @@
+
+import { Table, Column, Model, DataType, PrimaryKey, AllowNull, AutoIncrement, Unique, Default, ForeignKey, BelongsTo, HasMany} from 'sequelize-typescript';
+import { Product } from './Product';
+import { Order } from './Order';
+
+@Table({
+    tableName:"products_variants",
+    timestamps:true
+})
+
+export class ProductVariant extends Model {
+    @PrimaryKey
+    @AllowNull(false)
+    @Column(DataType.STRING(21))
+    id!:string;
+
+    @AllowNull(false)
+    @Unique
+    @Column(DataType.STRING(20))
+    name!:string;
+
+    @AllowNull(true)
+    @Default(0)
+    @Column(DataType.INTEGER)
+    stock!:number;
+
+    @AllowNull(true)
+    @Column(DataType.TEXT)
+    description?:string;
+
+    @AllowNull(false)
+    @Column(DataType.FLOAT(8, 2))
+    price!:number;
+
+    @AllowNull(true)
+    @Column(DataType.FLOAT(8, 2))
+    discountPrice?:number;
+
+    @ForeignKey(() => Product)
+    productId!:string;
+
+    @BelongsTo(() => Product)
+    product!: Product;
+
+    @HasMany(() => Order)
+    orders!:Order[]
+}
