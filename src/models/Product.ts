@@ -1,6 +1,6 @@
 
 import { nanoid } from 'nanoid';
-import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Unique, HasMany, Default} from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Unique, HasMany, Default, Index } from 'sequelize-typescript';
 import { ProductVariant } from './ProductVariant';
 import { ProductProperty } from './ProductProperty';
 import { Opinion } from './Opinion';
@@ -28,6 +28,13 @@ export class Product extends Model {
     @AllowNull(true)
     @Column(DataType.STRING(20))
     deliveryNote?:string;
+
+    @AllowNull(false)
+    @Index
+    @Default("Other")
+    @Column(DataType.STRING(100))
+    categoryString!:string
+
 
     @HasMany(() => ProductVariant, {
         onDelete:"CASCADE",

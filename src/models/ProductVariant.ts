@@ -1,6 +1,6 @@
 
-import {nanoid} from "nanoid"
-import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Unique, Default, ForeignKey, BelongsTo, HasMany, Index} from 'sequelize-typescript';
+import { nanoid } from "nanoid"
+import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Default, ForeignKey, BelongsTo, HasMany, Index } from 'sequelize-typescript';
 import { Product } from './Product';
 import { Order } from './Order';
 

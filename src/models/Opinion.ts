@@ -1,5 +1,5 @@
 
-import {nanoid} from "nanoid"
+import { nanoid } from "nanoid"
 import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Default, ForeignKey, BelongsTo, Validate, Index} from 'sequelize-typescript';
 import { Account } from "./Account";
 import { Product } from "./Product";

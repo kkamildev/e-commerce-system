@@ -1,7 +1,7 @@
 
 import { nanoid } from 'nanoid';
 
-import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Unique, Default, HasMany} from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Unique, Default, HasMany } from 'sequelize-typescript';
 import { Opinion } from './Opinion';
 
 @Table({

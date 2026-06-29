@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Default} from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Default } from 'sequelize-typescript';
 
 @Table({
   tableName: "config",

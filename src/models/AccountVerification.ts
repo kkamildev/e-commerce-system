@@ -1,6 +1,6 @@
 
 import { nanoid } from 'nanoid';
-import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Unique, AutoIncrement, Default, Index} from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Unique, Default, Index } from 'sequelize-typescript';
 
 @Table({
     tableName:"accountsVerifications",
