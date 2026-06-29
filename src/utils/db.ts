@@ -17,5 +17,5 @@ export const db = new Sequelize({
     password:process.env.DB_PASSWORD || "",
     database:process.env.DB_NAME || "e_commerce_db",
     models:[Config, User, Product, ProductProperty, ProductVariant, Order, Account, AccountVerification, Opinion],
-    logging:!(process.env.PRODUCTION == "true")
+    logging:process.env.DB_LOGGING == "true"
 })

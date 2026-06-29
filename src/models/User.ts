@@ -1,5 +1,5 @@
 
-import { Table, Column, Model, DataType, PrimaryKey, AllowNull, AutoIncrement } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, AllowNull, AutoIncrement, Unique } from 'sequelize-typescript';
 
 @Table({
     tableName:"users",
@@ -17,6 +17,7 @@ export class User extends Model {
     username!:string;
 
     @AllowNull(false)
+    @Unique
     @Column(DataType.STRING(75))
     email!:string;
 
