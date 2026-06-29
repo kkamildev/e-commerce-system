@@ -6,6 +6,8 @@ import { Product } from "../models/Product";
 import { ProductProperty } from "../models/ProductProperty";
 import { ProductVariant } from "../models/ProductVariant";
 import { Order } from "../models/Order";
+import { Account } from "../models/Account";
+import { Opinion } from "../models/Opinion";
 
 export const db = new Sequelize({
     dialect:"mysql",
@@ -13,6 +15,6 @@ export const db = new Sequelize({
     username:process.env.DB_USER || "root",
     password:process.env.DB_PASSWORD || "",
     database:process.env.DB_NAME || "e_commerce_db",
-    models:[Config, User, Product, ProductProperty, ProductVariant, Order],
-    logging:false
+    models:[Config, User, Product, ProductProperty, ProductVariant, Order, Account, Opinion],
+    logging:!(process.env.PRODUCTION == "true")
 })

@@ -1,5 +1,6 @@
 
-import { Table, Column, Model, DataType, PrimaryKey, AllowNull, AutoIncrement, Unique, Default, ForeignKey, BelongsTo, HasMany} from 'sequelize-typescript';
+import {nanoid} from "nanoid"
+import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Unique, Default, ForeignKey, BelongsTo, HasMany} from 'sequelize-typescript';
 import { Product } from './Product';
 import { Order } from './Order';
 
@@ -11,6 +12,7 @@ import { Order } from './Order';
 export class ProductVariant extends Model {
     @PrimaryKey
     @AllowNull(false)
+    @Default(() => nanoid())
     @Column(DataType.STRING(21))
     id!:string;
 
@@ -44,4 +46,5 @@ export class ProductVariant extends Model {
 
     @HasMany(() => Order)
     orders!:Order[]
+    
 }

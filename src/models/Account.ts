@@ -1,13 +1,13 @@
 
 import { nanoid } from 'nanoid';
-import { Table, Column, Model, DataType, PrimaryKey, AllowNull, ForeignKey, BelongsTo, Default} from 'sequelize-typescript';
-import { ProductVariant } from './ProductVariant';
+
+import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Unique, Default} from 'sequelize-typescript';
 
 @Table({
-    tableName:"orders",
-    timestamps:true,
+    tableName:"accounts",
+    timestamps:false
 })
-export class Order extends Model {
+export class Account extends Model {
     @PrimaryKey
     @AllowNull(false)
     @Default(() => nanoid())
@@ -16,11 +16,11 @@ export class Order extends Model {
 
     @AllowNull(false)
     @Column(DataType.STRING(50))
-    personName!:string;
+    name!:string;
 
     @AllowNull(false)
     @Column(DataType.STRING(50))
-    personSurname!:string;
+    surname!:string;
 
     @AllowNull(false)
     @Column(DataType.STRING(50))
@@ -47,17 +47,7 @@ export class Order extends Model {
     unitNumber!:number;
 
     @AllowNull(false)
+    @Unique
     @Column(DataType.STRING(75))
     email!:string;
-
-    // @AllowNull(false)
-    // @Default(false)
-    // @Column(DataType.BOOLEAN)
-    // paid!:boolean
-
-    @ForeignKey(() => ProductVariant)
-    productVariantId!:string;
-
-    @BelongsTo(() => ProductVariant)
-    productVariant!: ProductVariant;
 }

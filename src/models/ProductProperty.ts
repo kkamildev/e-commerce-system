@@ -1,5 +1,6 @@
 
-import { Table, Column, Model, DataType, PrimaryKey, AllowNull, AutoIncrement, Unique, ForeignKey, BelongsTo} from 'sequelize-typescript';
+import { nanoid } from 'nanoid';
+import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Unique, ForeignKey, BelongsTo, Default} from 'sequelize-typescript';
 import { Product } from './Product';
 
 @Table({
@@ -9,11 +10,11 @@ import { Product } from './Product';
 export class ProductProperty extends Model {
     @PrimaryKey
     @AllowNull(false)
+    @Default(() => nanoid())
     @Column(DataType.STRING(21))
     id!:string;
 
     @AllowNull(false)
-    @Unique
     @Column(DataType.STRING(20))
     name!:string;
 
