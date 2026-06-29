@@ -5,7 +5,7 @@ import { ProductVariant } from './ProductVariant';
 
 @Table({
     tableName:"orders",
-    timestamps:true
+    timestamps:false
 })
 export class Order extends Model {
     @PrimaryKey
@@ -13,6 +13,12 @@ export class Order extends Model {
     @Default(() => nanoid())
     @Column(DataType.STRING(21))
     id!:string;
+
+    @AllowNull(false)
+    @Index
+    @Default(DataType.NOW)
+    @Column(DataType.DATE)
+    createdAt!:Date
 
     @AllowNull(false)
     @Column(DataType.STRING(50))

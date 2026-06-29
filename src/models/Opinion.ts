@@ -1,13 +1,13 @@
 
 import {nanoid} from "nanoid"
-import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Unique, Default, ForeignKey, BelongsTo, Validate, Index} from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Default, ForeignKey, BelongsTo, Validate, Index} from 'sequelize-typescript';
 import { Account } from "./Account";
 import { Product } from "./Product";
 
 
 @Table({
     tableName:"opinions",
-    timestamps:true
+    timestamps:false
 })
 export class Opinion extends Model {
     @PrimaryKey
@@ -15,6 +15,13 @@ export class Opinion extends Model {
     @Default(() => nanoid())
     @Column(DataType.STRING(21))
     id!:string;
+
+
+    @AllowNull(false)
+    @Index
+    @Default(DataType.NOW)
+    @Column(DataType.DATE)
+    createdAt!:Date
 
     @AllowNull(false)
     @Index

@@ -1,10 +1,10 @@
 
 import { nanoid } from 'nanoid';
-import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Unique, AutoIncrement, Default} from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Unique, AutoIncrement, Default, Index} from 'sequelize-typescript';
 
 @Table({
     tableName:"accountsVerifications",
-    timestamps:true
+    timestamps:false
 })
 export class AccountVerification extends Model {
     @PrimaryKey
@@ -21,6 +21,12 @@ export class AccountVerification extends Model {
     @AllowNull(false)
     @Column(DataType.CHAR(60))
     code!:string;
+
+    @AllowNull(false)
+    @Index
+    @Default(DataType.NOW)
+    @Column(DataType.DATE)
+    createdAt!:Date
 
     @AllowNull(false)
     @Column(DataType.DATE())

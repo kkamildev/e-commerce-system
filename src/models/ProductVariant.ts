@@ -6,7 +6,7 @@ import { Order } from './Order';
 
 @Table({
     tableName:"products_variants",
-    timestamps:true
+    timestamps:false
 })
 
 export class ProductVariant extends Model {
