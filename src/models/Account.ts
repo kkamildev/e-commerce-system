@@ -1,7 +1,8 @@
 
 import { nanoid } from 'nanoid';
 
-import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Unique, Default} from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Unique, Default, HasMany} from 'sequelize-typescript';
+import { Opinion } from './Opinion';
 
 @Table({
     tableName:"accounts",
@@ -50,4 +51,10 @@ export class Account extends Model {
     @Unique
     @Column(DataType.STRING(75))
     email!:string;
+
+    @HasMany(() => Opinion, {
+        onDelete:"CASCADE",
+        hooks:true
+    })
+    opinions!:Opinion[]
 }

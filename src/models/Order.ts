@@ -1,11 +1,11 @@
 
 import { nanoid } from 'nanoid';
-import { Table, Column, Model, DataType, PrimaryKey, AllowNull, ForeignKey, BelongsTo, Default} from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, AllowNull, ForeignKey, BelongsTo, Default, Index} from 'sequelize-typescript';
 import { ProductVariant } from './ProductVariant';
 
 @Table({
     tableName:"orders",
-    timestamps:true,
+    timestamps:true
 })
 export class Order extends Model {
     @PrimaryKey
@@ -50,12 +50,8 @@ export class Order extends Model {
     @Column(DataType.STRING(75))
     email!:string;
 
-    // @AllowNull(false)
-    // @Default(false)
-    // @Column(DataType.BOOLEAN)
-    // paid!:boolean
-
     @ForeignKey(() => ProductVariant)
+    @Index
     productVariantId!:string;
 
     @BelongsTo(() => ProductVariant)

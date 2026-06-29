@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Unique, HasMany, Default} from 'sequelize-typescript';
 import { ProductVariant } from './ProductVariant';
 import { ProductProperty } from './ProductProperty';
+import { Opinion } from './Opinion';
 
 @Table({
     tableName:"products",
@@ -28,9 +29,21 @@ export class Product extends Model {
     @Column(DataType.STRING(20))
     deliveryNote?:string;
 
-    @HasMany(() => ProductVariant)
+    @HasMany(() => ProductVariant, {
+        onDelete:"CASCADE",
+        hooks:true
+    })
     productVariants!:ProductVariant[]
 
-    @HasMany(() => ProductProperty)
+    @HasMany(() => ProductProperty, {
+        onDelete:"CASCADE",
+        hooks:true
+    })
     productProperties!:ProductProperty[]
+
+    @HasMany(() => Opinion, {
+        onDelete:"CASCADE",
+        hooks:true
+    })
+    opinions!:Opinion[]
 }

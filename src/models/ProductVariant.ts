@@ -1,6 +1,6 @@
 
 import {nanoid} from "nanoid"
-import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Unique, Default, ForeignKey, BelongsTo, HasMany} from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Unique, Default, ForeignKey, BelongsTo, HasMany, Index} from 'sequelize-typescript';
 import { Product } from './Product';
 import { Order } from './Order';
 
@@ -17,7 +17,6 @@ export class ProductVariant extends Model {
     id!:string;
 
     @AllowNull(false)
-    @Unique
     @Column(DataType.STRING(20))
     name!:string;
 
@@ -31,6 +30,7 @@ export class ProductVariant extends Model {
     description?:string;
 
     @AllowNull(false)
+    @Index
     @Column(DataType.FLOAT(8, 2))
     price!:number;
 
@@ -39,12 +39,16 @@ export class ProductVariant extends Model {
     discountPrice?:number;
 
     @ForeignKey(() => Product)
+    @Index
     productId!:string;
 
     @BelongsTo(() => Product)
     product!: Product;
 
-    @HasMany(() => Order)
+    @HasMany(() => Order, {
+        onDelete:"CASCADE",
+        hooks:true
+    })
     orders!:Order[]
     
 }
