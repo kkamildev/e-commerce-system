@@ -27,22 +27,27 @@ const appRequestsLimit = rateLimit({
 });
 const app = express();
 
+// foundation middlewares
 app.use(express.json());
-app.use(cookieParser());
+app.use(cookieParser(process.env.COOKIE_TOKEN || "JBJKLnKKJpoUTFvH5FNMGE4764yi"));
 app.use(appRequestsLimit);
 
 
 const run = async () => {
+    // services
     await createDatabase();
+    await pingMailTransporterConnection();
     db.sync({alter:process.env.PRODUCTION == "false"});
     
+    // routes
+
     app.get("/", (req, res) => {
         res.status(200).json({
             text:"hello world"
         })
     })
     
-    await pingMailTransporterConnection();
+    // hosting front-end
     if(process.env.PRODUCTION == "true") {
         app.use(express.static(path.join(__dirname, "app", "dist")));
         app.use((req, res) => res.sendFile(path.join(__dirname, "app", "dist", "index.html")))
@@ -54,8 +59,7 @@ const run = async () => {
         app.use((req, res) => res.status(404).json({error:"Route not found"}));
     }
 
-
-
+    // listening
     app.listen(process.env.PORT || 3000, () => {
         console.log(`Server is listening on port ${process.env.PORT || 3000}`)
     })
