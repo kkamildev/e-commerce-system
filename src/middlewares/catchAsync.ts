@@ -1,6 +1,6 @@
 
 import { Request, Response } from "express";
-import { validationResult, matchedData } from "express-validator";
+import { validationResult} from "express-validator";
 
 
 type AsyncController = (req: Request, res: Response) => Promise<void>

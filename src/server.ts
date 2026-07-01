@@ -10,6 +10,7 @@ import cors from "cors"
 import path from "node:path";
 import cookieParser from "cookie-parser"
 import rateLimit from "express-rate-limit";
+import { transporter, pingMailTransporterConnection } from "./mail/transporter";
 
 
 const appRequestsLimit = rateLimit({
@@ -33,14 +34,15 @@ app.use(appRequestsLimit);
 
 const run = async () => {
     await createDatabase();
-    db.sync();
-
+    db.sync({alter:process.env.PRODUCTION == "false"});
+    
     app.get("/", (req, res) => {
         res.status(200).json({
             text:"hello world"
         })
     })
-
+    
+    await pingMailTransporterConnection();
     if(process.env.PRODUCTION == "true") {
         app.use(express.static(path.join(__dirname, "app", "dist")));
         app.use((req, res) => res.sendFile(path.join(__dirname, "app", "dist", "index.html")))
