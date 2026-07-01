@@ -1,6 +1,6 @@
 import { catchAsync } from "../middlewares/catchAsync";
 import { User } from "../models/User";
-import { verify, sign } from "jsonwebtoken"
+import { sign } from "jsonwebtoken"
 import bcrypt from "bcrypt"
 
 // GET
@@ -48,7 +48,7 @@ export const createAdminIfNotExist = catchAsync(async (req, res) => {
             res.status(400).json({success:false, errorMessage:"This email is already taken"})
         }
     } else {
-        res.status(400).json({success:false, errorMessage:"Admin already exist"})
+        res.status(409).json({success:false, errorMessage:"Admin already exist"})
     }
 });
 
