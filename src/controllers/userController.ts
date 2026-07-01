@@ -2,6 +2,8 @@ import { catchAsync } from "../middlewares/catchAsync";
 import { User } from "../models/User";
 import { sign } from "jsonwebtoken"
 import bcrypt from "bcrypt"
+import { AuthenticatedAccountRequest } from "../utils/interfaces";
+import { Response } from "express";
 
 // GET
 export const checkAdminExist = catchAsync( async (req, res) => {
@@ -11,11 +13,13 @@ export const checkAdminExist = catchAsync( async (req, res) => {
     if(admin) {
         res.status(200).json({
             success:true,
+            message:"Admin exist",
             exist:true
         })
     } else {
         res.status(200).json({
             success:true,
+            message:"Admin not exist",
             exist:false
         })
     }
@@ -68,10 +72,10 @@ export const loginUser = catchAsync( async (req, res) => {
                 username:user.username,
                 role:user.role
             }, process.env.REFRESH_TOKEN || "HHhbhvjjbioL", {
-                expiresIn:"7d"
-            })
-            res.status(200).json({success:true, message:"Login success", user:{id:user.id, username:user.username, role:user.role}}).cookie("REFRESH_TOKEN", token, {
-                maxAge:7 * 24 * 60 * 60 * 1000,
+                expiresIn:"3h"
+            });
+            res.status(200).json({success:true, message:"Login success", user:{id:user.id, username:user.username, role:user.role}}).cookie("ADMIN_REFRESH_TOKEN", token, {
+                maxAge:3 * 60 * 60 * 1000,
                 httpOnly:true,
                 sameSite:"strict",
                 signed:true,
@@ -84,8 +88,36 @@ export const loginUser = catchAsync( async (req, res) => {
     } else {
         res.status(404).json({success:false, errorMessage:"User not found"})
     }
-
 });
+
+// POST
+export const autoLoginUser = catchAsync(async (req : AuthenticatedAccountRequest , res : Response) => {
+    const user = req.user;
+    if(user) {
+        const token = sign({
+            id:user.id,
+            username:user.username,
+            role:user.role
+        }, process.env.REFRESH_TOKEN || "HHhbhvjjbioL", {
+            expiresIn:"3h"
+        });
+        res.status(200).json({success:true, message:"Login success", user:{id:user.id, username:user.username, role:user.role}}).cookie("ADMIN_REFRESH_TOKEN", token, {
+            maxAge:3 * 60 * 60 * 1000,
+            httpOnly:true,
+            sameSite:"strict",
+            signed:true,
+            secure:process.env.HTTPS == "true"
+        });
+    } else {
+        res.status(401).json({success:false, errorMessage:"Token expired"});
+    }
+});
+
+// GET
+export const logoutUser = catchAsync(async (req, res) => {
+    res.clearCookie("ADMIN_REFRESH_TOKEN");
+    res.clearCookie("ADMIN_ACCESS_TOKEN");
+})
 
 // GET
 export const getAllUsers = catchAsync(async (req, res) => {

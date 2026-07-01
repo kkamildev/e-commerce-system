@@ -52,6 +52,10 @@ export class Account extends Model {
     @Column(DataType.STRING(75))
     email!:string;
 
+    @AllowNull(false)
+    @Column(DataType.STRING(60))
+    password!:string
+
     @HasMany(() => Opinion, {
         onDelete:"CASCADE",
         hooks:true
