@@ -2,7 +2,7 @@ import { catchAsync } from "../middlewares/catchAsync";
 import { User } from "../models/User";
 import { sign } from "jsonwebtoken"
 import bcrypt from "bcrypt"
-import { AuthenticatedAccountRequest } from "../utils/interfaces";
+import { AuthenticatedAccountRequest, AuthenticatedUserRequest } from "../utils/interfaces";
 import { Response } from "express";
 
 // GET
@@ -74,7 +74,7 @@ export const loginUser = catchAsync( async (req, res) => {
             }, process.env.REFRESH_TOKEN || "HHhbhvjjbioL", {
                 expiresIn:"3h"
             });
-            res.status(200).json({success:true, message:"Login success", user:{id:user.id, username:user.username, role:user.role}}).cookie("ADMIN_REFRESH_TOKEN", token, {
+            res.status(200).json({success:true, message:"Login success", user:{id:user.id, username:user.username, role:user.role}}).cookie("USER_REFRESH_TOKEN", token, {
                 maxAge:3 * 60 * 60 * 1000,
                 httpOnly:true,
                 sameSite:"strict",
@@ -91,7 +91,7 @@ export const loginUser = catchAsync( async (req, res) => {
 });
 
 // POST
-export const autoLoginUser = catchAsync(async (req : AuthenticatedAccountRequest , res : Response) => {
+export const autoLoginUser = catchAsync(async (req : AuthenticatedUserRequest , res : Response) => {
     const user = req.user;
     if(user) {
         const token = sign({
@@ -101,7 +101,7 @@ export const autoLoginUser = catchAsync(async (req : AuthenticatedAccountRequest
         }, process.env.REFRESH_TOKEN || "HHhbhvjjbioL", {
             expiresIn:"3h"
         });
-        res.status(200).json({success:true, message:"Login success", user:{id:user.id, username:user.username, role:user.role}}).cookie("ADMIN_REFRESH_TOKEN", token, {
+        res.status(200).json({success:true, message:"Login success", user:{id:user.id, username:user.username, role:user.role}}).cookie("USER_REFRESH_TOKEN", token, {
             maxAge:3 * 60 * 60 * 1000,
             httpOnly:true,
             sameSite:"strict",
@@ -115,8 +115,8 @@ export const autoLoginUser = catchAsync(async (req : AuthenticatedAccountRequest
 
 // GET
 export const logoutUser = catchAsync(async (req, res) => {
-    res.clearCookie("ADMIN_REFRESH_TOKEN");
-    res.clearCookie("ADMIN_ACCESS_TOKEN");
+    res.clearCookie("USER_REFRESH_TOKEN");
+    res.clearCookie("USER_ACCESS_TOKEN");
 })
 
 // GET

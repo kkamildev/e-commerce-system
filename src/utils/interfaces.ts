@@ -1,7 +1,7 @@
 
 import { Request} from "express";
 
-export interface AuthenticatedAccountRequest extends Request {
+export interface AuthenticatedUserRequest extends Request {
   user?: {
     id: number;
     username:string
@@ -11,7 +11,7 @@ export interface AuthenticatedAccountRequest extends Request {
 
 export interface AuthenticatedAccountRequest extends Request {
   account?: {
-    id: number;
+    id: string;
     name:string
     surname: string,
     email:string
