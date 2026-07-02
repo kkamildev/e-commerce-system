@@ -156,6 +156,8 @@ export const updateUser = catchAsync(async (req, res) => {
         const exists = await User.count({ where: { id } });
         if (!exists) {
             res.status(404).json({success:false, errorMessage:"User not found"})
+        } else {
+            res.status(204);
         }
     }
     res.status(200).json({success:true, message:"Updated user"})
@@ -173,6 +175,8 @@ export const updateUserPassword = catchAsync(async (req, res) => {
         const exists = await User.count({ where: { id } });
         if (!exists) {
             res.status(404).json({success:false, errorMessage:"User not found"})
+        } else {
+            res.status(204);
         }
     } else {
         res.status(200).json({success:true, message:"Updated user"});

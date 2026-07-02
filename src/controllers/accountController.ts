@@ -5,6 +5,7 @@ import { AccountVerification } from "../models/AccountVerification";
 import bcrypt from "bcrypt"
 import { AuthenticatedAccountRequest } from "../utils/interfaces";
 import { Response } from "express";
+import { User } from "../models/User";
 
 
 
@@ -110,4 +111,75 @@ export const autoLoginUser = catchAsync(async (req : AuthenticatedAccountRequest
 export const logoutAccount = catchAsync(async (req, res) => {
     res.clearCookie("ACCOUNT_REFRESH_TOKEN");
     res.clearCookie("ACCOUNT_ACCESS_TOKEN");
-})
+});
+
+// GET
+export const getAccount = catchAsync(async (req : AuthenticatedAccountRequest, res : Response) => {
+    const account = req.account;
+
+    const user = await Account.findByPk(account?.id, {attributes:["id", "name", "surname", "country", "city", "postalCode", "street", "buildingNumber", "unitNumber", "email"]});
+    if(user) {
+        res.status(200).json({success:true, message:"Got account data", user})
+    } else {
+        res.status(404).json({success:false, errorMessage:"Account not found"});
+    }
+});
+
+// PUT
+export const updateAccount = catchAsync(async (req : AuthenticatedAccountRequest, res : Response) => {
+    const account = req.account;
+    const {name, surname, country, city, postalCode, street, buildingNumber, unitNumber} = req.body;
+
+    const [affectedRows] = await Account.update({name, surname, country, city, postalCode, street, buildingNumber, unitNumber}, {where:{id:account?.id}});
+
+    if(affectedRows == 0) {
+        const exists = await Account.count({ where: { id:account?.id } });
+        if (!exists) {
+            res.status(404).json({success:false, errorMessage:"Account not found"})
+        } else {
+            res.status(204);
+        }
+    } else {
+        res.status(200).json({success:true, message:"Updated account"});
+    }
+});
+
+// PUT
+export const updateAccountPassword = catchAsync(async (req : AuthenticatedAccountRequest, res : Response) => {
+    const account = req.account;
+    const {oldPassword, password} = req.body;
+
+    const user = await Account.findByPk(account?.id);
+    if(user) {
+        const verified = await bcrypt.compare(oldPassword, user.password);
+        if(verified) {
+            const passwordHash = await bcrypt.hash(password, Number(process.env.BCRYPT_ROUNDS || 10));
+            await Account.update({password:passwordHash}, {where:{id:user.id}});
+            res.status(200).json({success:true, message:"Updated account password"})
+        } else {
+            res.status(401).json({success:false, errorMessage:"Invalid password"})
+        }
+
+    } else {
+        res.status(404).json({success:false, errorMessage:"Account not found"})
+    }
+        
+});
+// DELETE
+export const deleteAccount = catchAsync(async (req : AuthenticatedAccountRequest, res : Response) => {
+    const account = req.account;
+    const {password} = req.body;
+    const user = await Account.findByPk(account?.id);
+    if(user) {
+        const verified = await bcrypt.compare(password, user.password);
+        if(verified) {
+            await Account.destroy({where:{id:user.id}});
+            res.status(200).json({success:true, message:"Deleted account"});
+        } else {
+            res.status(401).json({success:false, errorMessage:"Invalid password"})
+        }
+
+    } else {
+        res.status(404).json({success:false, errorMessage:"Account not found"})
+    }
+});
