@@ -7,7 +7,7 @@ export const transporter = createTransport({
     secure:Number(process.env.MAIL_PORT) == 465,
     auth:{
         user:process.env.MAIL_USER || "something@gmail.com",
-        pass:process.env.MAIL_PASSWORD || "something@gmail.com",
+        pass:process.env.MAIL_PASSWORD || "",
     }
 });
 

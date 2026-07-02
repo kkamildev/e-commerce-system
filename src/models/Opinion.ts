@@ -1,6 +1,6 @@
 
 import { nanoid } from "nanoid"
-import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Default, ForeignKey, BelongsTo, Validate, Index} from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, AllowNull, Default, ForeignKey, BelongsTo, Validate, Index, Unique} from 'sequelize-typescript';
 import { Account } from "./Account";
 import { Product } from "./Product";
 
@@ -15,7 +15,6 @@ export class Opinion extends Model {
     @Default(() => nanoid())
     @Column(DataType.STRING(21))
     id!:string;
-
 
     @AllowNull(false)
     @Index
@@ -37,7 +36,7 @@ export class Opinion extends Model {
     comment!:string
     
     @ForeignKey(() => Account)
-    @Index
+    @Unique
     accountId!:string;
 
     @BelongsTo(() => Account)
