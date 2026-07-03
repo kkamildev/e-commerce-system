@@ -18,7 +18,16 @@ export class Order extends Model {
     @Index
     @Default(DataType.NOW)
     @Column(DataType.DATE)
-    createdAt!:Date
+    createdAt!:Date;
+
+    @AllowNull(true)
+    @Column(DataType.DATE)
+    deliveredAt?:Date;
+
+    @AllowNull(false)
+    @Default("Waiting")
+    @Column(DataType.ENUM("Waiting", "Preparing", "In transit", "Delivered"))
+    status!:string;
 
     @AllowNull(false)
     @Column(DataType.STRING(50))

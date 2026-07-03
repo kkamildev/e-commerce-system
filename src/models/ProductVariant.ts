@@ -34,10 +34,6 @@ export class ProductVariant extends Model {
     @Column(DataType.FLOAT(8, 2))
     price!:number;
 
-    @AllowNull(true)
-    @Column(DataType.FLOAT(8, 2))
-    discountPrice?:number;
-
     @ForeignKey(() => Product)
     @Index
     productId!:string;
