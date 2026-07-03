@@ -17,6 +17,16 @@ export class Product extends Model {
     id!:string;
 
     @AllowNull(false)
+    @Default(DataType.NOW)
+    @Column(DataType.DATE)
+    createdAt!:Date;
+
+    @AllowNull(false)
+    @Default(0)
+    @Column(DataType.INTEGER)
+    sellCount!:number;
+
+    @AllowNull(false)
     @Unique
     @Column(DataType.STRING(50))
     fullname!:string;

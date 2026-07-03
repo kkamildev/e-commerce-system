@@ -26,7 +26,7 @@ export const getProductOpinions = catchAsync(async(req : AuthenticatedAccountReq
         },
         order:["createdAt"],
         limit:Number(limit),
-        offset:Math.max(Number(limit) - 20, 0)
+        offset:Math.max(Number(limit) - 30, 0)
 
     });
     res.status(200).json({success:true, message:"Got opinions", opinions});

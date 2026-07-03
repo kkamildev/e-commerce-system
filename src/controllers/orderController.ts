@@ -22,6 +22,7 @@ export const createOrder = catchAsync(async (req, res) => {
             
                 const order = await Order.create({personName, personSurname, country, city, postalCode, street, buildingNumber, unitNumber, email, productVariantId}, {transaction:t});
                 await ProductVariant.update({stock:existProductvariant.stock - 1}, {where:{id:existProductvariant.id}, transaction:t});
+                await Product.update({sellCount:existProductvariant.product.sellCount + 1}, {where:{id:existProductvariant.product.id}, transaction:t});
 
                 return order;
             })
@@ -61,6 +62,8 @@ export const createOrderUsingAccount = catchAsync(async (req : AuthenticatedAcco
                     productVariantId
                 });
                 await ProductVariant.update({stock:existProductvariant.stock - 1}, {where:{id:existProductvariant.id}, transaction:t});
+                await Product.update({sellCount:existProductvariant.product.sellCount + 1}, {where:{id:existProductvariant.product.id}, transaction:t});
+
                 return order;
             })
             res.status(201).json({success:true, message:"Created order", insertId:result.id});

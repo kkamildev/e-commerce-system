@@ -4,7 +4,7 @@ import { Table, Column, Model, DataType, PrimaryKey, AllowNull, ForeignKey, Belo
 import { Product } from './Product';
 
 @Table({
-    tableName:"products_properties",
+    tableName:"productsProperties",
     timestamps:false
 })
 export class ProductProperty extends Model {

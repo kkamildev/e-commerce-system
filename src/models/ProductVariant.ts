@@ -5,7 +5,7 @@ import { Product } from './Product';
 import { Order } from './Order';
 
 @Table({
-    tableName:"products_variants",
+    tableName:"productsVariants",
     timestamps:false
 })
 

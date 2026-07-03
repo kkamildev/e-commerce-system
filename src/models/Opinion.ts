@@ -37,6 +37,7 @@ export class Opinion extends Model {
     
     @ForeignKey(() => Account)
     @Unique
+    @Column(DataType.STRING)
     accountId!:string;
 
     @BelongsTo(() => Account)
