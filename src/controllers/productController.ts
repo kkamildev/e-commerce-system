@@ -255,14 +255,14 @@ export const createProduct = catchAsync(async (req, res) => {
 
 // PUT
 export const updateProduct = catchAsync(async (req, res) => {
-    const {productId, fullName, description, deliveryNote, categoryString} = req.body;
+    const {id, fullName, description, deliveryNote, categoryString} = req.body;
     const productProperties = req.body.productProperties as ProductPropertyDataScheme[];
-    const existingProduct = await Product.findByPk(productId);
+    const existingProduct = await Product.findByPk(id);
     if(existingProduct) {
         const fullNameExist = await Product.count({where:{fullName}});
         if(!fullNameExist) {
             const result = await db.transaction(async (t : Transaction) => {
-                await Product.update({fullName, description, deliveryNote, categoryString}, {where:{id:productId}, transaction:t});
+                await Product.update({fullName, description, deliveryNote, categoryString}, {where:{id:id}, transaction:t});
                 for(const productProperty of productProperties) {
                     await ProductProperty.update({name:productProperty.name, note:productProperty.note}, {where:{id:productProperty.id}, transaction:t})
                 }
@@ -278,8 +278,8 @@ export const updateProduct = catchAsync(async (req, res) => {
 
 // DELETE
 export const deleteProduct = catchAsync(async (req, res) => {
-    const {productId} = req.body;
-    const existProduct = await Product.findByPk(productId);
+    const {id} = req.body;
+    const existProduct = await Product.findByPk(id);
     if(existProduct) {
         const ordersRelatedToProductCount = await Order.count({
             include:[{
@@ -291,7 +291,7 @@ export const deleteProduct = catchAsync(async (req, res) => {
                     as:"product",
                     required:true,
                     where:{
-                        id:productId
+                        id
                     }
                 }]
             }],
@@ -302,7 +302,7 @@ export const deleteProduct = catchAsync(async (req, res) => {
             }
         });
         if(ordersRelatedToProductCount == 0) {
-            await Product.destroy({where:{id:productId}});
+            await Product.destroy({where:{id}});
             res.status(200).json({success:false})
         } else {
             res.status(409).json({success:false, errorMessage:"Require no orders"})

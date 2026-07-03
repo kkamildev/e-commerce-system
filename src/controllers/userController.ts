@@ -159,8 +159,9 @@ export const updateUser = catchAsync(async (req, res) => {
         } else {
             res.status(204);
         }
+    } else {
+        res.status(200).json({success:true, message:"Updated user"})
     }
-    res.status(200).json({success:true, message:"Updated user"})
 });
 
 // PUT

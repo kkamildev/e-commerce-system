@@ -129,13 +129,13 @@ export const getAllProductsOrders = catchAsync(async (req, res) => {
 });
 
 // PUT
-const updateOrderStatus = catchAsync(async (req, res) => {
-    const {orderId, status} = req.body;
+export const updateOrderStatus = catchAsync(async (req, res) => {
+    const {id, status} = req.body;
     
-    const [affectedRows] = await Order.update({status}, {where:{id:orderId}})
+    const [affectedRows] = await Order.update({status}, {where:{id}})
 
     if(affectedRows == 0) {
-        const exists = await Order.count({ where: { id:orderId } });
+        const exists = await Order.count({ where: { id } });
         if (!exists) {
             res.status(404).json({success:false, errorMessage:"Order not found"})
         } else {
@@ -147,12 +147,12 @@ const updateOrderStatus = catchAsync(async (req, res) => {
 });
 
 // DELETE
-const deleteDeliveredOrder = catchAsync(async (req, res) => {
-    const {orderId} = req.body;
+export const deleteDeliveredOrder = catchAsync(async (req, res) => {
+    const {id} = req.body;
 
     const deletedCount = await Order.destroy({
         where:{
-            id:orderId,
+            id,
             status:"Delivered"
         }
     });
