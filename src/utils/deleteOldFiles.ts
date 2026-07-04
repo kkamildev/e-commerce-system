@@ -23,7 +23,7 @@ export const deleteOldFiles = async (dirPath : string) => {
       }
     }
     console.log("Cleanup process completed successfully. Deleted files: " + deletedCount);
-  } catch (error) {
-    console.error("Error during file cleanup:", error);
+  } catch (err) {
+    console.error("Error during file cleanup:", err);
   }
 }
