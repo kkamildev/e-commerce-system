@@ -11,6 +11,9 @@ import path from "node:path";
 import cookieParser from "cookie-parser"
 import rateLimit from "express-rate-limit";
 import { transporter, pingMailTransporterConnection } from "./mail/transporter";
+import { createBackup } from "./utils/createBackup";
+import { schedule } from "node-cron";
+import { deleteOldFiles } from "./utils/deleteOldFiles";
 
 
 const appRequestsLimit = rateLimit({
@@ -58,6 +61,14 @@ const run = async () => {
         }));
         app.use((req, res) => res.status(404).json({error:"Route not found"}));
     }
+
+
+    // node cron (backups creating and old backups delete)
+
+    schedule("0 0 6 * * *", async () => {
+        createBackup("backups");
+        await deleteOldFiles(path.join(__dirname, "..", "backups"));
+    })
 
     // listening
     app.listen(process.env.PORT || 3000, () => {
