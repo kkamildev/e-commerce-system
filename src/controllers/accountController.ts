@@ -5,7 +5,6 @@ import { AccountVerification } from "../models/AccountVerification";
 import bcrypt from "bcrypt"
 import { AuthenticatedAccountRequest } from "../utils/interfaces";
 import { Response } from "express";
-import { User } from "../models/User";
 
 
 
@@ -84,7 +83,7 @@ export const loginAccount = catchAsync( async (req, res) => {
 });
 
 // POST
-export const autoLoginUser = catchAsync(async (req : AuthenticatedAccountRequest , res : Response) => {
+export const autoLoginAccount = catchAsync(async (req : AuthenticatedAccountRequest , res : Response) => {
     const account = req.account;
     if(account) {
         const token = sign({

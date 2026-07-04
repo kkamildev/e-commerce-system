@@ -2,7 +2,7 @@ import { catchAsync } from "../middlewares/catchAsync";
 import { User } from "../models/User";
 import { sign } from "jsonwebtoken"
 import bcrypt from "bcrypt"
-import { AuthenticatedAccountRequest, AuthenticatedUserRequest } from "../utils/interfaces";
+import { AuthenticatedUserRequest } from "../utils/interfaces";
 import { Response } from "express";
 
 // GET

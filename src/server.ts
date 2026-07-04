@@ -15,6 +15,8 @@ import { createBackup } from "./utils/createBackup";
 import { schedule } from "node-cron";
 import { deleteOldFiles } from "./utils/deleteOldFiles";
 
+import usersRouter from "./routes/users.routes"
+
 
 const appRequestsLimit = rateLimit({
     windowMs:60 * 1000,
@@ -44,11 +46,7 @@ const run = async () => {
     
     // routes
 
-    app.get("/", (req, res) => {
-        res.status(200).json({
-            text:"hello world"
-        })
-    })
+    app.use("/users", usersRouter);
     
     // hosting front-end
     if(process.env.PRODUCTION == "true") {
