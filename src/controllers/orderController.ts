@@ -6,74 +6,121 @@ import { Product } from "../models/Product";
 import { ProductVariant } from "../models/ProductVariant";
 import { AuthenticatedAccountRequest } from "../utils/interfaces";
 import { db } from "../utils/db";
+import { sendOrderConfirmationEmail } from "../mail/sendOrderConfirmationEmail";
 
 
 
 // POST
 export const createOrder = catchAsync(async (req, res) => {
-    const {personName, personSurname, country, city, postalCode, street, buildingNumber, unitNumber, email, productVariantId, quantity} = req.body;
+    const {personName, personSurname, country, city, postalCode, street, buildingNumber, unitNumber, email, productVariantIds, quantities} = req.body;
     
-    const existProductvariant = await ProductVariant.findByPk(productVariantId);
-    if(existProductvariant) {
-        if(existProductvariant.stock - quantity >= 0) {
-            const result = await db.transaction(async (t : Transaction) => {
-                
-                // extension of payment here
-            
-                const order = await Order.create({personName, personSurname, country, city, postalCode, street, buildingNumber, unitNumber, email, productVariantId}, {transaction:t});
-                await ProductVariant.update({stock:existProductvariant.stock - quantity}, {where:{id:existProductvariant.id}, transaction:t});
-                await Product.update({sellCount:existProductvariant.product.sellCount + quantity}, {where:{id:existProductvariant.product.id}, transaction:t});
+    
+    if(productVariantIds.length == quantities) {
+        let index = 0;
+        let success = true;
+        const result = await db.transaction(async (t : Transaction) => {
+            let orders : Order[] = [];
 
-                return order;
-            })
-        
-            res.status(201).json({success:true, message:"Created order", insertId:result.id});
-        } else {
-            res.status(400).json({success:false, errorMessage:"Not enough in stock"})
+            // payment gate here
+
+            for(const productVariantId of productVariantIds) {
+                const existProductvariant = await ProductVariant.findByPk(productVariantId);
+                if(existProductvariant) {
+                    if(existProductvariant.stock - quantities[index] >= 0) {
+                        const order = await Order.create({personName, personSurname, country, city, postalCode, street, buildingNumber, unitNumber, email, productVariantId}, {transaction:t});
+                        await ProductVariant.update({stock:existProductvariant.stock - quantities[index]}, {where:{id:existProductvariant.id}, transaction:t});
+                        await Product.update({sellCount:existProductvariant.product.sellCount + quantities[index]}, {where:{id:existProductvariant.product.id}, transaction:t});
+                        orders.push(order);
+                    } else {
+                        await t.rollback();
+                        res.status(400).json({success:false, errorMessage:"Not enough in stock"});
+                        success = false;
+                        break;
+                    }
+                } else {
+                    await t.rollback();
+                    res.status(404).json({success:false, errorMessage:"Product variant not found"});
+                    success = false;
+                    break;
+                }
+                index++;
+            }
+            return orders;
+        });
+        if(success) {
+            if(productVariantIds.length == 0) {
+                const emailInfo = await sendOrderConfirmationEmail(result[0].email, result[0].personName, result[0].personSurname, result);
+                res.status(201).json({success:true, message:"Created order", insertId:result[0].id});
+            } else {
+                res.status(204);
+            }
         }
     } else {
-        res.status(404).json({success:false, errorMessage:"Product variant not found"});
+        res.status(400).json({success:false, errorMessage:"Quantities and productvVariantsIds are not length equal"})
     }
+
 });
 
 // POST
 export const createOrderUsingAccount = catchAsync(async (req : AuthenticatedAccountRequest, res) => {
     const account = req.account;
-    const {productVariantId, quantity} = req.body;
+    const {productVariantIds, quantities} = req.body;
 
-    const existProductvariant = await ProductVariant.findByPk(productVariantId);
+     if(productVariantIds.length == quantities) {
+        let index = 0;
+        let success = true;
+        const result = await db.transaction(async (t : Transaction) => {
+            let orders : Order[] = [];
 
-    if(existProductvariant) {
-        const accountData = await Account.findByPk(account?.id);
-        if(existProductvariant.stock - quantity >= 0) {
-            const result = await db.transaction(async (t : Transaction) => {
-                // extension of payment here
-            
-                const order = await Order.create({
-                    personName:accountData?.name,
-                    personSurname:accountData?.surname,
-                    country:accountData?.country,
-                    city:accountData?.city,
-                    postalCode:accountData?.postalCode,
-                    street:accountData?.street,
-                    buildingNumber:accountData?.buildingNumber,
-                    unitNumber:accountData?.unitNumber,
-                    email:accountData?.email,
-                    productVariantId
-                });
-                await ProductVariant.update({stock:existProductvariant.stock - quantity}, {where:{id:existProductvariant.id}, transaction:t});
-                await Product.update({sellCount:existProductvariant.product.sellCount + quantity}, {where:{id:existProductvariant.product.id}, transaction:t});
+            // payment gate here
 
-                return order;
-            })
-            res.status(201).json({success:true, message:"Created order", insertId:result.id});
-        } else {
-            res.status(400).json({success:false, errorMessage:"Not enough in stock"})
+            const accountData = await Account.findByPk(account?.id);
+            for(const productVariantId of productVariantIds) {
+                const existProductvariant = await ProductVariant.findByPk(productVariantId);
+                if(existProductvariant) {
+                    if(existProductvariant.stock - quantities[index] >= 0) {
+                        const order = await Order.create({
+                            personName:accountData?.name,
+                            personSurname:accountData?.surname,
+                            country:accountData?.country,
+                            city:accountData?.city,
+                            postalCode:accountData?.postalCode,
+                            street:accountData?.street,
+                            buildingNumber:accountData?.buildingNumber,
+                            unitNumber:accountData?.unitNumber,
+                            email:accountData?.email,
+                            productVariantId
+                        });
+                        await ProductVariant.update({stock:existProductvariant.stock - quantities[index]}, {where:{id:existProductvariant.id}, transaction:t});
+                        await Product.update({sellCount:existProductvariant.product.sellCount + quantities[index]}, {where:{id:existProductvariant.product.id}, transaction:t});
+                        orders.push(order);
+                    } else {
+                        await t.rollback();
+                        res.status(400).json({success:false, errorMessage:"Not enough in stock"});
+                        success = false;
+                        break;
+                    }
+                } else {
+                    await t.rollback();
+                    res.status(404).json({success:false, errorMessage:"Product variant not found"});
+                    success = false;
+                    break;
+                }
+                index++;
+            }
+            return orders;
+        });
+        if(success) {
+            if(productVariantIds.length == 0) {
+                const emailInfo = await sendOrderConfirmationEmail(result[0].email, result[0].personName, result[0].personSurname, result);
+                res.status(201).json({success:true, message:"Created order", insertId:result[0].id});
+            } else {
+                res.status(204);
+            }
         }
     } else {
-        res.status(404).json({success:false, errorMessage:"Product variant not found"});
+        res.status(400).json({success:false, errorMessage:"Quantities and productvVariantsIds are not length equal"})
     }
-
 });
 
 // GET

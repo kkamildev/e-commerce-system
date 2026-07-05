@@ -5,6 +5,7 @@ import { AccountVerification } from "../models/AccountVerification";
 import bcrypt from "bcrypt"
 import { AuthenticatedAccountRequest } from "../utils/interfaces";
 import { Response } from "express";
+import { sendAccountCreationEmail } from "../mail/sendAccountCreationEmail";
 
 
 
@@ -33,6 +34,7 @@ export const registerAccount = catchAsync(async (req, res) => {
                     const passwordHash = await bcrypt.hash(password, Number(process.env.BCRYPT_ROUNDS || 10));
                     const account = await Account.create({name, surname, country, city, postalCode, street, buildingNumber, unitNumber, email, password:passwordHash});
                     await AccountVerification.destroy({where:{email}});
+                    const emailInfo = await sendAccountCreationEmail(email, name, surname);
                     res.status(201).json({success:true, message:"Registered User", insertId:account.id});
                 } else {
                     res.status(401).json({success:false, errorMessage:"Verification failed"});
