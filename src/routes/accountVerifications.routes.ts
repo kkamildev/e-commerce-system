@@ -5,6 +5,8 @@ import { createAccountVerification } from "../controllers/accountVerificationCon
 
 const router = Router();
 
+// accounts-verifications/
+
 router.post("/", createValidator, createAccountVerification);
 
 

@@ -18,6 +18,7 @@ import { deleteOldFiles } from "./utils/deleteOldFiles";
 import usersRouter from "./routes/users.routes"
 import accountsRouter from "./routes/accounts.routes"
 import accountsVerificationsRouter from "./routes/accountVerifications.routes"
+import configRouter from "./routes/config.routes"
 
 
 const appRequestsLimit = rateLimit({
@@ -51,6 +52,7 @@ const run = async () => {
     app.use("/users", usersRouter);
     app.use("/accounts", accountsRouter);
     app.use("/accounts-verifications", accountsVerificationsRouter);
+    app.use("/config", configRouter);
     
     // hosting front-end
     if(process.env.PRODUCTION == "true") {
