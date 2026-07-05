@@ -10,12 +10,14 @@ import cors from "cors"
 import path from "node:path";
 import cookieParser from "cookie-parser"
 import rateLimit from "express-rate-limit";
-import { transporter, pingMailTransporterConnection } from "./mail/transporter";
+import { pingMailTransporterConnection } from "./mail/transporter";
 import { createBackup } from "./utils/createBackup";
 import { schedule } from "node-cron";
 import { deleteOldFiles } from "./utils/deleteOldFiles";
 
 import usersRouter from "./routes/users.routes"
+import accountsRouter from "./routes/accounts.routes"
+import accountsVerificationsRouter from "./routes/accountVerifications.routes"
 
 
 const appRequestsLimit = rateLimit({
@@ -47,6 +49,8 @@ const run = async () => {
     // routes
 
     app.use("/users", usersRouter);
+    app.use("/accounts", accountsRouter);
+    app.use("/accounts-verifications", accountsVerificationsRouter);
     
     // hosting front-end
     if(process.env.PRODUCTION == "true") {

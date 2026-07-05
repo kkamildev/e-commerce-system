@@ -65,6 +65,11 @@ export class Order extends Model {
     @Column(DataType.STRING(75))
     email!:string;
 
+    @AllowNull(false)
+    @Default(1)
+    @Column(DataType.INTEGER)
+    quantity!:number;
+
     @ForeignKey(() => ProductVariant)
     @Index
     productVariantId!:string;

@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { checkEmailExistsValidator, registerValidator } from "../validators/accountValidators";
-import { autoLoginAccount, checkEmailExists, getAccount, loginAccount, logoutAccount, registerAccount } from "../controllers/accountController";
+import { checkEmailExistsValidator, deleteValidator, registerValidator, updatePasswordValidator, updateValidator } from "../validators/accountValidators";
+import { autoLoginAccount, checkEmailExists, deleteAccount, getAccount, loginAccount, logoutAccount, registerAccount, updateAccount, updateAccountPassword } from "../controllers/accountController";
 import { loginValidator } from "../validators/userValidators";
 import { accountAuth } from "../middlewares/accountAuth";
 
@@ -21,6 +21,12 @@ router.post("/auto-login", autoLoginAccount);
 router.get("/logout", logoutAccount);
 
 router.get("/account", getAccount);
+
+router.put("/account", updateValidator, updateAccount);
+
+router.put("/account", updatePasswordValidator, updateAccountPassword);
+
+router.delete("/account", deleteValidator, deleteAccount);
 
 
 

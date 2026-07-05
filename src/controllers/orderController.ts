@@ -11,18 +11,18 @@ import { db } from "../utils/db";
 
 // POST
 export const createOrder = catchAsync(async (req, res) => {
-    const {personName, personSurname, country, city, postalCode, street, buildingNumber, unitNumber, email, productVariantId} = req.body;
+    const {personName, personSurname, country, city, postalCode, street, buildingNumber, unitNumber, email, productVariantId, quantity} = req.body;
     
     const existProductvariant = await ProductVariant.findByPk(productVariantId);
     if(existProductvariant) {
-        if(existProductvariant.stock > 0) {
+        if(existProductvariant.stock - quantity >= 0) {
             const result = await db.transaction(async (t : Transaction) => {
                 
                 // extension of payment here
             
                 const order = await Order.create({personName, personSurname, country, city, postalCode, street, buildingNumber, unitNumber, email, productVariantId}, {transaction:t});
-                await ProductVariant.update({stock:existProductvariant.stock - 1}, {where:{id:existProductvariant.id}, transaction:t});
-                await Product.update({sellCount:existProductvariant.product.sellCount + 1}, {where:{id:existProductvariant.product.id}, transaction:t});
+                await ProductVariant.update({stock:existProductvariant.stock - quantity}, {where:{id:existProductvariant.id}, transaction:t});
+                await Product.update({sellCount:existProductvariant.product.sellCount + quantity}, {where:{id:existProductvariant.product.id}, transaction:t});
 
                 return order;
             })
@@ -39,13 +39,13 @@ export const createOrder = catchAsync(async (req, res) => {
 // POST
 export const createOrderUsingAccount = catchAsync(async (req : AuthenticatedAccountRequest, res) => {
     const account = req.account;
-    const {productVariantId} = req.body;
+    const {productVariantId, quantity} = req.body;
 
     const existProductvariant = await ProductVariant.findByPk(productVariantId);
 
     if(existProductvariant) {
         const accountData = await Account.findByPk(account?.id);
-        if(existProductvariant.stock > 0) {
+        if(existProductvariant.stock - quantity >= 0) {
             const result = await db.transaction(async (t : Transaction) => {
                 // extension of payment here
             
@@ -61,8 +61,8 @@ export const createOrderUsingAccount = catchAsync(async (req : AuthenticatedAcco
                     email:accountData?.email,
                     productVariantId
                 });
-                await ProductVariant.update({stock:existProductvariant.stock - 1}, {where:{id:existProductvariant.id}, transaction:t});
-                await Product.update({sellCount:existProductvariant.product.sellCount + 1}, {where:{id:existProductvariant.product.id}, transaction:t});
+                await ProductVariant.update({stock:existProductvariant.stock - quantity}, {where:{id:existProductvariant.id}, transaction:t});
+                await Product.update({sellCount:existProductvariant.product.sellCount + quantity}, {where:{id:existProductvariant.product.id}, transaction:t});
 
                 return order;
             })
