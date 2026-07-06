@@ -54,15 +54,15 @@ const run = async () => {
     
     // routes
 
-    app.use("/users", usersRouter);
-    app.use("/accounts", accountsRouter);
-    app.use("/accounts-verifications", accountsVerificationsRouter);
-    app.use("/config", configRouter);
-    app.use("/opinions", opinionRouter);
-    app.use("/orders", orderRouter);
-    app.use("/products", productRouter);
-    app.use("/products-properties", productPropertiesRouter)
-    app.use("/products-variants", productVariantsRouter)
+    app.use("/api/users", usersRouter);
+    app.use("/api/accounts", accountsRouter);
+    app.use("/api/accounts-verifications", accountsVerificationsRouter);
+    app.use("/api/config", configRouter);
+    app.use("/api/opinions", opinionRouter);
+    app.use("/api/orders", orderRouter);
+    app.use("/api/products", productRouter);
+    app.use("/api/products-properties", productPropertiesRouter)
+    app.use("/api/products-variants", productVariantsRouter)
     
     // hosting front-end
     if(process.env.PRODUCTION == "true") {
