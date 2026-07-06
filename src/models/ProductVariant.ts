@@ -26,7 +26,7 @@ export class ProductVariant extends Model {
     stock!:number;
 
     @AllowNull(true)
-    @Column(DataType.TEXT)
+    @Column(DataType.STRING(250))
     description?:string;
 
     @AllowNull(false)

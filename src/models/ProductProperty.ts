@@ -15,11 +15,11 @@ export class ProductProperty extends Model {
     id!:string;
 
     @AllowNull(false)
-    @Column(DataType.STRING(20))
+    @Column(DataType.STRING(30))
     name!:string;
 
     @AllowNull(false)
-    @Column(DataType.TEXT)
+    @Column(DataType.STRING(100))
     note!:string;
 
     @ForeignKey(() => Product)

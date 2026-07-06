@@ -20,6 +20,9 @@ export const createValidator = [
     body("description").trim().exists({checkFalsy:true}).withMessage("description is required").isLength({max:400}).withMessage("Maximum length 400"),
     body("deliveryNote").trim().exists({checkFalsy:true}).withMessage("deliveryNote is required").isLength({max:100}).withMessage("Maximum length 100"),
     body("categoryString").trim().exists({checkFalsy:true}).withMessage("categoryString is required").isLength({max:100}).withMessage("Maximum length 100"),
+    body("productProperties").trim().exists({checkFalsy:true}).withMessage("productProperties is required").isArray().withMessage("productProperties must be an array"),
+    body("productProperties.*.name").trim().exists({checkFalsy:true}).withMessage("each product property require a name").isLength({max:30}).withMessage("Maximum length 30"),
+    body("productProperties.*.note").trim().exists({checkFalsy:true}).withMessage("each product property require a note").isLength({max:100}).withMessage("Maximum length 100"),
 ]
 
 export const updateValidator = [
@@ -28,6 +31,9 @@ export const updateValidator = [
     body("description").trim().exists({checkFalsy:true}).withMessage("description is required").isLength({max:400}).withMessage("Maximum length 400"),
     body("deliveryNote").trim().exists({checkFalsy:true}).withMessage("deliveryNote is required").isLength({max:100}).withMessage("Maximum length 100"),
     body("categoryString").trim().exists({checkFalsy:true}).withMessage("categoryString is required").isLength({max:100}).withMessage("Maximum length 100"),
+    body("productProperties.*.name").trim().exists({checkFalsy:true}).withMessage("each product property require a name").isLength({max:30}).withMessage("Maximum length 30"),
+    body("productProperties.*.note").trim().exists({checkFalsy:true}).withMessage("each product property require a note").isLength({max:100}).withMessage("Maximum length 100"),
+    body("productProperties.*.id").trim()
 ]
 
 export const deleteValidator = [
