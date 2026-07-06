@@ -39,3 +39,8 @@ export const updateValidator = [
 export const deleteValidator = [
     body("id").trim().exists({checkFalsy:true}).withMessage("id is required"),
 ]
+
+export const getImageValidator = [
+    query("id").trim().exists({checkFalsy:true}).withMessage("id is required"),
+    query("index").trim().exists().withMessage("index is required").isInt({min:0, max:5}).withMessage("index must a positive number in range [0;5]"),
+]

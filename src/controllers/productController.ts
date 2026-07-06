@@ -6,6 +6,10 @@ import { db } from "../utils/db";
 import { ProductVariant } from "../models/ProductVariant";
 import { Sequelize } from "sequelize-typescript";
 import { Order } from "../models/Order";
+import path from "node:path";
+import fs from "fs/promises"
+import fsSync from "fs"
+import { MulterRequest } from "../utils/interfaces";
 
 
 
@@ -14,6 +18,32 @@ interface ProductPropertyDataScheme {
     name:string,
     note:string
 }
+
+
+// GET
+export const getProductImage = catchAsync(async (req, res) => {
+    const {id, index} = req.query;
+    const destination = path.join(__dirname, "..", "..", "uploads", "products", `${index}-${id}.jpg`);
+    if(!fsSync.existsSync(destination)) {
+        res.status(404).json({success:false, errorMessage:"product image not found"})
+    } else {
+        res.status(200).sendFile(destination);
+    }
+});
+
+// POST 
+export const uploadProductImage = catchAsync(async (req : MulterRequest, res) => {
+    if(req.file) {
+        if(req.file.filename != "garbage.jpg") {
+            res.status(201).json({success:true, message:"file uploaded successfully"})
+        } else {
+            await fs.unlink(path.join(__dirname, "..", "..", "uploads", "products", "garbage.jpg"))
+            res.status(400).json({success:false, errorMessage:"file upload failed"})
+        }
+    } else {
+        res.status(400).json({success:false, errorMessage:"file upload failed"})
+    }
+})
 
 
 // GET
