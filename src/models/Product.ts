@@ -32,11 +32,11 @@ export class Product extends Model {
     fullname!:string;
 
     @AllowNull(true)
-    @Column(DataType.TEXT)
+    @Column(DataType.STRING(400))
     description?:string;
 
     @AllowNull(true)
-    @Column(DataType.STRING(20))
+    @Column(DataType.STRING(100))
     deliveryNote?:string;
 
     @AllowNull(false)

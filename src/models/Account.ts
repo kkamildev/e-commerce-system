@@ -43,7 +43,7 @@ export class Account extends Model {
     @Column(DataType.INTEGER)
     buildingNumber!:number;
 
-    @AllowNull(false)
+    @AllowNull(true)
     @Column(DataType.INTEGER)
     unitNumber!:number;
 

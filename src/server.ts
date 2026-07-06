@@ -19,6 +19,9 @@ import usersRouter from "./routes/users.routes"
 import accountsRouter from "./routes/accounts.routes"
 import accountsVerificationsRouter from "./routes/accountVerifications.routes"
 import configRouter from "./routes/config.routes"
+import opinionRouter from "./routes/opinions.routes"
+import orderRouter from "./routes/orders.routes"
+import productRouter from "./routes/products.routes"
 
 
 const appRequestsLimit = rateLimit({
@@ -53,6 +56,9 @@ const run = async () => {
     app.use("/accounts", accountsRouter);
     app.use("/accounts-verifications", accountsVerificationsRouter);
     app.use("/config", configRouter);
+    app.use("/opinions", opinionRouter);
+    app.use("/orders", orderRouter);
+    app.use("/products", productRouter);
     
     // hosting front-end
     if(process.env.PRODUCTION == "true") {
