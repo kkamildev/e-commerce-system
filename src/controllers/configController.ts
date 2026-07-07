@@ -17,7 +17,7 @@ export const getConfig = catchAsync(async (req, res) => {
 export const getBanner = catchAsync(async (req, res) => {
     const destination = path.join(__dirname, "..", "..", "uploads", "config", "banner.jpg");
     if(!fs.existsSync(destination)) {
-        res.status(404).json({success:false, errorMessage:"banner not found"})
+        res.status(200).json({success:false, errorMessage:"banner not found"})
     } else {
         res.status(200).sendFile(destination);
     }
@@ -27,7 +27,7 @@ export const getBanner = catchAsync(async (req, res) => {
 export const getLogo = catchAsync(async (req, res) => {
     const destination = path.join(__dirname, "..", "..", "uploads", "config", "logo.png");
     if(!fs.existsSync(destination)) {
-        res.status(404).sendFile(path.join(__dirname, "..", "assets", "defaultLogo.png"))
+        res.status(200).sendFile(path.join(__dirname, "..", "assets", "defaultLogo.png"))
     } else {
         res.status(200).sendFile(destination);
     }

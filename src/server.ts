@@ -66,12 +66,13 @@ const run = async () => {
     
     // hosting front-end
     if(process.env.PRODUCTION == "true") {
-        app.use(express.static(path.join(__dirname, "app", "dist")));
-        app.use((req, res) => res.sendFile(path.join(__dirname, "app", "dist", "index.html")))
+        app.use(express.static(path.join(__dirname, "..", "app", "dist")));
+        app.use((req, res) => res.sendFile(path.join(__dirname, "..", "app", "dist", "index.html")))
     } else {
         app.use(cors({
             origin:"http://localhost:5173",
             methods:["GET", "POST", "PUT", "DELETE"],
+            credentials:true
         }));
         app.use((req, res) => res.status(404).json({error:"Route not found"}));
     }
