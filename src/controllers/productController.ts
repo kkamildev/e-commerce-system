@@ -24,10 +24,17 @@ interface ProductPropertyDataScheme {
 export const getProductImage = catchAsync(async (req, res) => {
     const {id, index} = req.query;
     const destination = path.join(__dirname, "..", "..", "uploads", "products", `${index}-${id}.jpg`);
+
+    const options = {
+        maxAge: "1h",
+        headers: {
+            "Cache-Control": "public, max-age=3600"
+        }
+    };
     if(!fsSync.existsSync(destination)) {
         res.status(404).json({success:false, errorMessage:"product image not found"})
     } else {
-        res.status(200).sendFile(destination);
+        res.status(200).sendFile(destination, options);
     }
 });
 

@@ -1,4 +1,14 @@
-@import "tailwindcss"
+@import "tailwindcss";
 
 
+.primary-btn {
+    @apply bg-indigo-600 hover:bg-indigo-500 border-2 border-white rounded-lg px-3 py-2 text-white font-bold text-center cursor-pointer transition-colors duration-150 ease-in-out
+}
 
+.error-label {
+    @apply border-4 border-red-600 bg-red-400 text-red-800 rounded-xl p-2 my-2 mx-4 font-extrabold
+}
+
+.success-label {
+    @apply border-4 border-green-600 bg-green-400 text-green-800 rounded-xl p-2 my-2 mx-4 font-extrabold
+}

@@ -16,20 +16,34 @@ export const getConfig = catchAsync(async (req, res) => {
 // GET
 export const getBanner = catchAsync(async (req, res) => {
     const destination = path.join(__dirname, "..", "..", "uploads", "config", "banner.jpg");
+    const options = {
+        maxAge: "1d",
+        headers: {
+            "Cache-Control": "public, max-age=86400, immutable",
+            "Content-Disposition": "inline"
+        }
+    };
     if(!fs.existsSync(destination)) {
         res.status(200).json({success:false, errorMessage:"banner not found"})
     } else {
-        res.status(200).sendFile(destination);
+        res.status(200).sendFile(destination, options);
     }
 })
 
 // GET
 export const getLogo = catchAsync(async (req, res) => {
     const destination = path.join(__dirname, "..", "..", "uploads", "config", "logo.png");
+    const options = {
+        maxAge: "1d",
+        headers: {
+            "Cache-Control": "public, max-age=86400, immutable",
+            "Content-Disposition": "inline"
+        }
+    };
     if(!fs.existsSync(destination)) {
-        res.status(200).sendFile(path.join(__dirname, "..", "assets", "defaultLogo.png"))
+        res.status(200).sendFile(path.join(__dirname, "..", "assets", "defaultLogo.png"), options)
     } else {
-        res.status(200).sendFile(destination);
+        res.status(200).sendFile(destination, options);
     }
 })
 

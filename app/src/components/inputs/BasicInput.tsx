@@ -1,4 +1,4 @@
-import { useState, useRef, type FC } from "react";
+import { useState, useRef, type FC, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {type IconDefinition } from "@fortawesome/free-regular-svg-icons";
 import {faCircleExclamation} from "@fortawesome/free-solid-svg-icons"
@@ -11,7 +11,8 @@ type Props = {
     errorMessages?: string[];
     type?:string
     onErrorChange?:(name : string, errorAppear : boolean) => void;
-    icon?:IconDefinition
+    icon?:IconDefinition,
+    required?:boolean
 };
 
 const BasicInput: FC<Props> = ({
@@ -22,11 +23,18 @@ const BasicInput: FC<Props> = ({
     errorMessages = [],
     onErrorChange,
     type = "text",
-    icon
+    icon,
+    required = false,
 }) => {
+
+    useEffect(() => {
+        if(required) {
+            validate("")
+        }
+    }, [required])
     const inputRef = useRef<HTMLInputElement>(null);
     const [errorMessage, setErrorMessage] = useState("");
-
+    
     function validate(value: string) {
         for (let i = 0; i < regexp.length; i++) {
             if (!regexp[i].test(value)) {
