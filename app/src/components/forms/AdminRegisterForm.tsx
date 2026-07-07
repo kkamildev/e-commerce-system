@@ -1,8 +1,8 @@
 import { useState, type FC } from "react";
 import BasicInput from "../inputs/BasicInput";
-import { faCreditCard, faHome} from "@fortawesome/free-regular-svg-icons";
 import type { Result } from "../../layouts/FormLayout";
 import FormLayout from "../../layouts/FormLayout";
+import { faEnvelope, faLock, faUser, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 
 
 type Props = {
@@ -20,7 +20,7 @@ const AdminRegisterForm : FC<Props> = ({onSubmit}) => {
 
     const submit = async (e : React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if(errors && Object.keys(errors).length == 2) {
+        if(errors && Object.keys(errors).length == 3) {
             if(Object.values(errors).every((error) => !error)) {
                 setPending(true);
                 // logic
@@ -38,28 +38,48 @@ const AdminRegisterForm : FC<Props> = ({onSubmit}) => {
     }
 
     return (
-        <FormLayout onSubmit={submit} pending={pending} result={result} title="Register" submitText="Register" submitIcon={faCreditCard}>
-            <BasicInput name="input" title="Test" placeholder="Name..."
+        <FormLayout onSubmit={submit} pending={pending} result={result} title="Register Admin" submitText="Register" submitIcon={faUserPlus}>
+            <BasicInput name="username" title="Username" placeholder="e.g. Jan Kowalski"
                 regexp={[
-                    /^[a-z]{1,1}$/
+                    /^.{3,}$/,
+                    /^.{0,50}$/,
+                    /^[^\s].*[^\s]$/
                 ]}
                 errorMessages={[
-                    "Odd input"
+                    "Too short",
+                    "Too long",
+                    "Invalid spaces"
                 ]}
-                icon={faHome}
+                icon={faUser}
                 onErrorChange={(name, error) => setErrors((prev) => ({...prev, [name]:error}))}
                 required={required}
             />
-            <BasicInput name="input2" title="Test" placeholder="Name..."
+            <BasicInput name="email" title="Email" placeholder="e.g. kowalski@gmail.com"
                 regexp={[
-                    /^[a-z]{1,1}$/
+                    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    /^.{1,75}$/s
                 ]}
                 errorMessages={[
-                    "Odd input"
+                    "Invalid Email",
+                    "Too long"
                 ]}
-                icon={faHome}
+                icon={faEnvelope}
                 onErrorChange={(name, error) => setErrors((prev) => ({...prev, [name]:error}))}
                 required={required}
+            />
+            <BasicInput name="password" title="Password" placeholder="e.g. 123456"
+                regexp={[
+                    /^.{8,}$/s,
+                    /^.{1,72}$/s
+                ]}
+                errorMessages={[
+                    "Min 8 characters",
+                    "Too long"
+                ]}
+                icon={faLock}
+                onErrorChange={(name, error) => setErrors((prev) => ({...prev, [name]:error}))}
+                required={required}
+                type="password"
             />
         </FormLayout>
     )

@@ -1,7 +1,7 @@
 import { useState, useRef, type FC, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {type IconDefinition } from "@fortawesome/free-regular-svg-icons";
-import {faCircleExclamation, faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons"
+import {faCircleExclamation} from "@fortawesome/free-solid-svg-icons"
 
 type Props = {
     name: string;
@@ -9,20 +9,18 @@ type Props = {
     placeholder: string;
     regexp?: RegExp[];
     errorMessages?: string[];
-    type?:string
     onErrorChange?:(name : string, errorAppear : boolean) => void;
     icon?:IconDefinition,
     required?:boolean
 };
 
-const BasicInput: FC<Props> = ({
+const AreaInput: FC<Props> = ({
     name,
     title,
     placeholder,
     regexp = [],
     errorMessages = [],
     onErrorChange,
-    type = "text",
     icon,
     required = false,
 }) => {
@@ -32,9 +30,8 @@ const BasicInput: FC<Props> = ({
             validate(inputRef.current.value || "")
         }
     }, [required])
-    const inputRef = useRef<HTMLInputElement>(null);
+    const inputRef = useRef<HTMLTextAreaElement>(null);
     const [errorMessage, setErrorMessage] = useState("");
-    const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
     
     function validate(value: string) {
         for (let i = 0; i < regexp.length; i++) {
@@ -52,7 +49,7 @@ const BasicInput: FC<Props> = ({
     <section className="flex flex-col m-3">
         <label
         htmlFor={name}
-        className={`${errorMessage ? "border-red-600" : "border-gray-300"} flex items-center bg-zinc-200 p-2 rounded-lg border-3 focus-within:border-indigo-500 transition-colors ease-in-out duration-200`}
+        className={`${errorMessage ? "border-red-600" : "border-gray-300"} flex items-start bg-zinc-200 p-2 rounded-lg border-3 focus-within:border-indigo-500 transition-colors ease-in-out duration-200`}
         >
 
         {
@@ -66,19 +63,9 @@ const BasicInput: FC<Props> = ({
         <section className="flex flex-col">
             <p className="font-bold text-zinc-500 text-lg">{title}</p>
 
-            <input
-                ref={inputRef}
-                placeholder={placeholder}
-                name={name}
-                type={passwordVisible ? "text" : type}
-                id={name}
-                className="placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-0 py-1 font-bold text-xl"
-                onChange={(e) => validate(e.target.value)}
-            />
+
+            <textarea ref={inputRef} name={name} id={name} placeholder={placeholder} onChange={(e) => validate(e.target.value)} className="placeholder:text-gray-400 h-50 resize-none rounded-lg focus:outline-none focus:ring-0 py-1 font-bold text-xl"></textarea>
         </section>
-        {
-            type == "password" && <button type="button" onClick={() => setPasswordVisible(!passwordVisible)}><FontAwesomeIcon className="text-2xl cursor-pointer text-zinc-500" icon={passwordVisible ? faEyeSlash : faEye}/></button>
-        }
         </label>
 
         {errorMessage && (
@@ -88,4 +75,4 @@ const BasicInput: FC<Props> = ({
     );
 };
 
-export default BasicInput;
+export default AreaInput;

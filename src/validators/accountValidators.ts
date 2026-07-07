@@ -8,7 +8,7 @@ export const checkEmailExistsValidator = [
 
 export const registerValidator = [
     body("email").trim().exists({checkFalsy:true}).withMessage("email is required").isLength({max:75}).withMessage("Maximum length 75").isEmail().withMessage("Must be a email"),
-    body("password").trim().exists({checkFalsy:true}).withMessage("password is required").isLength({max:72}).withMessage("Maximum length 72"),
+    body("password").exists({checkFalsy:true}).withMessage("password is required").isLength({max:72}).withMessage("Maximum length 72"),
     body("name").trim().exists({checkFalsy:true}).withMessage("name is required").isLength({max:50}).withMessage("Maximum length 50"),
     body("surname").trim().exists({checkFalsy:true}).withMessage("surname is required").isLength({max:50}).withMessage("Maximum length 50"),
     body("country").trim().exists({checkFalsy:true}).withMessage("country is required").isLength({max:50}).withMessage("Maximum length 50"),
@@ -22,7 +22,7 @@ export const registerValidator = [
 
 export const loginValidator = [
     body("email").trim().exists().withMessage("email is required").isEmail().withMessage("Must be a email"),
-    body("password").trim().exists().withMessage("password is required")
+    body("password").exists().withMessage("password is required")
 ]
 
 export const updateValidator = [
@@ -37,10 +37,10 @@ export const updateValidator = [
 ]
 
 export const updatePasswordValidator = [
-    body("oldPassword").trim().exists({checkFalsy:true}).withMessage("oldPassword is required").isLength({max:72}).withMessage("Maximum length 72"),
-    body("password").trim().exists({checkFalsy:true}).withMessage("password is required").isLength({max:72}).withMessage("Maximum length 72"),
+    body("oldPassword").exists({checkFalsy:true}).withMessage("oldPassword is required").isLength({max:72}).withMessage("Maximum length 72"),
+    body("password").exists({checkFalsy:true}).withMessage("password is required").isLength({max:72}).withMessage("Maximum length 72"),
 ]
 
 export const deleteValidator = [
-    body("password").trim().exists({checkFalsy:true}).withMessage("password is required").isLength({max:72}).withMessage("Maximum length 72"),
+    body("password").exists({checkFalsy:true}).withMessage("password is required").isLength({max:72}).withMessage("Maximum length 72"),
 ]

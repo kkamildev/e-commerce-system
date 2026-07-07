@@ -14,7 +14,7 @@ const PageLayout : FC<Props> = ({children, title}) => {
             <Helmet>
                 <title>{title || "e-commerce-app"}</title>
             </Helmet>
-            <main className="min-h-screen">
+            <main className="min-h-screen h-screen">
                 {children}
             </main>
         </>
