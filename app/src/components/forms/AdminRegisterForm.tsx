@@ -2,7 +2,7 @@ import { useState, type FC } from "react";
 import BasicInput from "../inputs/BasicInput";
 import type { Result } from "../../layouts/FormLayout";
 import FormLayout from "../../layouts/FormLayout";
-import { faEnvelope, faLock, faUser, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { faCircleArrowRight, faEnvelope, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 
 
 type Props = {
@@ -38,7 +38,7 @@ const AdminRegisterForm : FC<Props> = ({onSubmit}) => {
     }
 
     return (
-        <FormLayout onSubmit={submit} pending={pending} result={result} title="Register Admin" submitText="Register" submitIcon={faUserPlus}>
+        <FormLayout onSubmit={submit} pending={pending} result={result} title="Register Admin" submitText="Next" submitIcon={faCircleArrowRight}>
             <BasicInput name="username" title="Username" placeholder="e.g. Jan Kowalski"
                 regexp={[
                     /^.{3,}$/,

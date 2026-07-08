@@ -2,7 +2,7 @@ import { useState, type FC } from "react";
 import BasicInput from "../inputs/BasicInput";
 import type { Result } from "../../layouts/FormLayout";
 import FormLayout from "../../layouts/FormLayout";
-import { faCamera, faFile, faHeading, faStore, faWrench } from "@fortawesome/free-solid-svg-icons";
+import { faCamera, faCircleArrowRight, faFile, faHeading, faStore} from "@fortawesome/free-solid-svg-icons";
 import AreaInput from "../inputs/AreaInput";
 import FileInput from "../inputs/FileInput";
 
@@ -40,7 +40,7 @@ const SetupStoreForm : FC<Props> = ({onSubmit}) => {
     }
 
     return (
-        <FormLayout onSubmit={submit} pending={pending} result={result} title="Add store config" submitText="Finish" submitIcon={faWrench}>
+        <FormLayout onSubmit={submit} pending={pending} result={result} title="Add store config" submitText="Next" submitIcon={faCircleArrowRight}>
             <BasicInput name="storeName" title="Store name" placeholder="e.g. Kowalski Store"
                 regexp={[
                     /^.{1,}$/,
@@ -74,7 +74,7 @@ const SetupStoreForm : FC<Props> = ({onSubmit}) => {
             <section className="flex flex-col lg:flex-row items-center justify-around">
                 <FileInput
                     name="storeIcon"
-                    title="Store icon"
+                    title="* Store icon"
                     mediaType="image/"
                     placeholder="Max 20 MB"
                     icon={faCamera}
@@ -86,7 +86,7 @@ const SetupStoreForm : FC<Props> = ({onSubmit}) => {
                 />
                 <FileInput
                     name="storeBanner"
-                    title="Store banner"
+                    title="* Store banner"
                     mediaType="image/"
                     placeholder="Max 20 MB"
                     icon={faCamera}

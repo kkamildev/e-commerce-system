@@ -16,7 +16,6 @@ const App : FC<Props> = ({}) => {
 
 
                 <Route path="/" element={<h1>User Panel</h1>}/>
-                <Route path="/" element={<h1>User Panel</h1>}/>
             </Routes>
         </BrowserRouter>
     )
