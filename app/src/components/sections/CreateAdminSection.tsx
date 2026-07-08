@@ -3,15 +3,47 @@ import AdminRegisterForm from "../forms/AdminRegisterForm";
 import type { Result } from "../../layouts/FormLayout";
 import SetupStoreForm from "../forms/SetupStoreForm";
 import BaseConfirmation from "../confirmations/BaseConfirmation";
+import { request } from "../../utils/request";
 
 
 type Props = {
-
+    onCreate:() => Promise<void>
 }
 
-const CreateAdminSecion : FC<Props> = ({}) => {
+const CreateAdminSection : FC<Props> = ({onCreate}) => {
 
     const [formData, setFormData] = useState<FormData[]>([]);
+
+
+    const createAdminAndConfig = async () : Promise<Result> => {
+
+        let okResultsCount = 0;
+        let errorMessage = "";
+        const adminCreationResult = await request("POST", "/api/users/admin", {},
+            {
+                username:formData[0].get("username"),
+                email:formData[0].get("email"),
+                password:formData[0].get("password")
+            }
+        );
+        if(adminCreationResult.ok) okResultsCount++; else errorMessage = adminCreationResult.message
+        const configCreationResult = await request("POST", "/api/config", {},
+            {
+                storeName:formData[1].get("storeName"),
+                storeDescription:formData[1].get("storeDescription"),
+                mainPageTitle:formData[1].get("mainPageTitle"),
+                mainPageSubtitle:formData[1].get("mainPageSubtitle")
+            }
+        );
+        if(configCreationResult.ok) okResultsCount++; else errorMessage = adminCreationResult.message
+
+        if(okResultsCount == 2) {
+            onCreate();
+            return {ok:true, serverError:false, message:"Configuration successfully created"}
+        } else {
+            return {ok:false, serverError:false, message:errorMessage}
+        }
+    }
 
     return (
         <section className="flex flex-col items-center justify-between h-full">
@@ -50,7 +82,11 @@ const CreateAdminSecion : FC<Props> = ({}) => {
                         <h1 className="text-6xl font-bold text-zinc-800 my-2 text-center">Check data</h1>
                         <h2 className="text-4xl font-bold text-zinc-800 mb-5 text-center">And finish configuration</h2>
 
-                        <BaseConfirmation acceptContent="Finish" onAccept={async () => ({ok:false, message:"Unexpected error appeared", serverError:false})} >
+                        <BaseConfirmation acceptContent="Finish"
+                            onAccept={async () => {
+                                const result = await createAdminAndConfig();
+                                return result;
+                            }} >
                             <section className="flex flex-col lg:flex-row justify-center">
                                 <section className="flex flex-col m-4 font-bold w-75">
                                     <h3 className="text-3xl font-bold text-zinc-800 mb-2">Admin information</h3>
@@ -65,11 +101,6 @@ const CreateAdminSecion : FC<Props> = ({}) => {
                                     <p className="text-zinc-700 text-xl mt-3">Main page title: {formData[1].get("mainPageTitle").toString()}</p>
                                     <p className="text-zinc-700 text-xl mt-3">Main page subtitle: {formData[1].get("mainPageSubtitle").toString()}</p>
                                 </section>
-                                <section className="flex flex-col m-4 font-bold w-75">
-                                    <h3 className="text-3xl text-zinc-800 mb-2">Store Images</h3>
-                                    <p className="text-zinc-700 text-xl mt-3">Store logo: {formData[1].has("storeIcon") ? "New" : "Default"}</p>
-                                    <p className="text-zinc-700 text-xl mt-3">Store banner: {formData[1].has("storeBanner") ? "New" : "Default"}</p>
-                                </section>
                             </section>
                         </BaseConfirmation>
                     </>
@@ -80,4 +111,4 @@ const CreateAdminSecion : FC<Props> = ({}) => {
     )
 }
 
-export default CreateAdminSecion;
+export default CreateAdminSection;

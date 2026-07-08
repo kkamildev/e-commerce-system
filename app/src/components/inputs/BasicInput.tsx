@@ -74,16 +74,14 @@ const BasicInput: FC<Props> = ({
                 id={name}
                 className="placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-0 py-1 font-bold text-xl"
                 onChange={(e) => validate(e.target.value)}
+                autoComplete={type == "password" ? "new-password" : "off"}
             />
         </section>
         {
             type == "password" && <button type="button" onClick={() => setPasswordVisible(!passwordVisible)}><FontAwesomeIcon className="text-2xl cursor-pointer text-zinc-500" icon={passwordVisible ? faEyeSlash : faEye}/></button>
         }
         </label>
-
-        {errorMessage && (
-            <p className="text-red-600 font-bold text-xl py-1 pl-1">{errorMessage && <FontAwesomeIcon icon={faCircleExclamation} className="pr-1"/>}{errorMessage}</p>
-        )}
+        <p className={`${errorMessage || "invisible"} text-red-600 font-bold text-xl pt-1 pl-1`}>{errorMessage && <FontAwesomeIcon icon={faCircleExclamation} className="pr-1"/>}{errorMessage || "Error message here"}</p>
     </section>
     );
 };

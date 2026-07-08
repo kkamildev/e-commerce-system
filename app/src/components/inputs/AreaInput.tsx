@@ -67,10 +67,7 @@ const AreaInput: FC<Props> = ({
             <textarea ref={inputRef} name={name} id={name} placeholder={placeholder} onChange={(e) => validate(e.target.value)} className="placeholder:text-gray-400 h-50 resize-none rounded-lg focus:outline-none focus:ring-0 py-1 font-bold text-xl"></textarea>
         </section>
         </label>
-
-        {errorMessage && (
-            <p className="text-red-600 font-bold text-xl py-1 pl-1">{errorMessage && <FontAwesomeIcon icon={faCircleExclamation} className="pr-1"/>}{errorMessage}</p>
-        )}
+        <p className={`${errorMessage || "invisible"} text-red-600 font-bold text-xl pt-1 pl-1`}>{errorMessage && <FontAwesomeIcon icon={faCircleExclamation} className="pr-1"/>}{errorMessage || "Error message here"}</p>
     </section>
     );
 };

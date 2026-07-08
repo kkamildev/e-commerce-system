@@ -125,10 +125,7 @@ const FileInput: FC<Props> = ({
             }}><FontAwesomeIcon className="text-2xl cursor-pointer text-zinc-500 ml-3" icon={faCancel}/></button>
         }
         </label>
-
-        {errorMessage && (
-            <p className="text-red-600 font-bold text-xl py-1 pl-1">{errorMessage && <FontAwesomeIcon icon={faCircleExclamation} className="pr-1"/>}{errorMessage}</p>
-        )}
+        <p className={`${errorMessage || "invisible"} text-red-600 font-bold text-xl pt-1 pl-1`}>{errorMessage && <FontAwesomeIcon icon={faCircleExclamation} className="pr-1"/>}{errorMessage || "Error message here"}</p>
     </section>
     );
 };

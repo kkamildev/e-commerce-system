@@ -50,7 +50,7 @@ const run = async () => {
     // services
     await createDatabase();
     await pingMailTransporterConnection();
-    db.sync({alter:process.env.PRODUCTION == "false"});
+    // db.sync({alter:process.env.PRODUCTION == "false"});
     
     // routes
 

@@ -69,7 +69,7 @@ export const createConfig = catchAsync(async (req, res) => {
 
     const {storeName, storeDescription, mainPageTitle, mainPageSubtitle} = req.body;
 
-    const exist = Config.count();
+    const exist = await Config.count();
     if(!exist) {
         await Config.create({storeName, storeDescription, mainPageTitle, mainPageSubtitle});
         res.status(201).json({success:true, message:"Created default config"});

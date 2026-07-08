@@ -14,6 +14,8 @@ router.get("/banner", getBanner);
 
 router.get("/logo", getLogo);
 
+router.post("/", createValidator, createConfig);
+
 router.use(userAuth());
 router.use(userRoleAuth(["Admin"]))
 
@@ -23,7 +25,6 @@ router.post("/banner", upload.single("file"), uploadBanner);
 
 router.post("/logo", upload.single("file"), uploadLogo);
 
-router.post("/", createValidator, createConfig);
 
 router.put("/", updateValidator, updateConfig);
 

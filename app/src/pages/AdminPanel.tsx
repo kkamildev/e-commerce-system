@@ -2,7 +2,7 @@ import { useEffect, useState, type FC } from "react";
 
 import PageLayout from "../layouts/PageLayout";
 import { request } from "../utils/request";
-import CreateAdminSecion from "../components/sections/CreateAdminSection";
+import CreateAdminSection from "../components/sections/CreateAdminSection";
 
 
 type Props = {
@@ -27,7 +27,7 @@ const AdminPanel : FC<Props> = ({}) => {
     return(
         <PageLayout title="Admin Panel">
             {
-                !adminExist ? <CreateAdminSecion/> : <></>
+                !adminExist ? <CreateAdminSection onCreate={checkAdminExist}/> : <></>
             }
         </PageLayout>
     )
