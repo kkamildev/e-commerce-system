@@ -16,10 +16,10 @@ router.get("/logo", getLogo);
 
 router.post("/", createValidator, createConfig);
 
+router.get("/", getConfig);
+
 router.use(userAuth());
 router.use(userRoleAuth(["Admin"]))
-
-router.get("/", getConfig);
 
 router.post("/banner", upload.single("file"), uploadBanner);
 

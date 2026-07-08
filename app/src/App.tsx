@@ -12,7 +12,10 @@ const App : FC<Props> = ({}) => {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/admin" element={<AdminPanel/>}/>
+                <Route path="/admin" element={<AdminPanel/>}>
+                    <Route index element={<h1>Hello world</h1>}/>
+                    <Route path="users" element={<h1>Users</h1>}/>
+                </Route>
 
 
                 <Route path="/" element={<h1>User Panel</h1>}/>

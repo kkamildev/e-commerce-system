@@ -13,9 +13,9 @@ interface userPayload extends JwtPayload {
 
 export const userAuth = () => {
     const createAccessToken = (req : AuthenticatedUserRequest, res : Response, next : NextFunction) => {
-        if(req.cookies["USER_REFRESH_TOKEN"]) {
+        if(req.signedCookies["USER_REFRESH_TOKEN"]) {
             try {
-                const decoded = verify(req.cookies["USER_REFRESH_TOKEN"], process.env.REFRESH_TOKEN || "HHhbhvjjbioL") as userPayload;
+                const decoded = verify(req.signedCookies["USER_REFRESH_TOKEN"], process.env.REFRESH_TOKEN || "HHhbhvjjbioL") as userPayload;
                 const {iat, exp, nbf, jti, ...sanitizedClaims} = decoded;
                 const accessToken = sign(sanitizedClaims, process.env.ACCESS_TOKEN || "JHj6hVKkPkj5yTknpLu4A", {
                     expiresIn:"10m"
@@ -37,7 +37,7 @@ export const userAuth = () => {
         }
     }
     return (req: AuthenticatedUserRequest, res : Response, next : NextFunction) => {
-        if(req.cookies["USER_ACCESS_TOKEN"]) {
+        if(req.signedCookies["USER_ACCESS_TOKEN"]) {
             try {
                 const decoded = verify(req.cookies["USER_ACCESS_TOKEN"], process.env.ACCESS_TOKEN || "JHj6hVKkPkj5yTknpLu4A") as userPayload;
                 req.user = decoded;

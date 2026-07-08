@@ -74,13 +74,13 @@ export const loginUser = catchAsync( async (req, res) => {
             }, process.env.REFRESH_TOKEN || "HHhbhvjjbioL", {
                 expiresIn:"3h"
             });
-            res.status(200).json({success:true, message:"Login success", user:{id:user.id, username:user.username, role:user.role}}).cookie("USER_REFRESH_TOKEN", token, {
+            res.status(200).cookie("USER_REFRESH_TOKEN", token, {
                 maxAge:3 * 60 * 60 * 1000,
                 httpOnly:true,
                 sameSite:"strict",
                 signed:true,
                 secure:process.env.HTTPS == "true"
-            })
+            }).json({success:true, message:"Login success", user:{id:user.id, username:user.username, role:user.role}})
         } else {
             res.status(401).json({success:false, errorMessage:"Invalid password"})
         }
@@ -101,22 +101,28 @@ export const autoLoginUser = catchAsync(async (req : AuthenticatedUserRequest , 
         }, process.env.REFRESH_TOKEN || "HHhbhvjjbioL", {
             expiresIn:"3h"
         });
-        res.status(200).json({success:true, message:"Login success", user:{id:user.id, username:user.username, role:user.role}}).cookie("USER_REFRESH_TOKEN", token, {
+        res.status(200).cookie("USER_REFRESH_TOKEN", token, {
             maxAge:3 * 60 * 60 * 1000,
             httpOnly:true,
             sameSite:"strict",
             signed:true,
             secure:process.env.HTTPS == "true"
-        });
+        }).json({success:true, message:"Login success", user:{id:user.id, username:user.username, role:user.role}});
     } else {
         res.status(401).json({success:false, errorMessage:"Token expired"});
     }
 });
 
 // GET
+export const authUser = catchAsync(async (req : AuthenticatedUserRequest, res : Response) => {
+    res.status(200).json({success:true, message:"Auth success", user:req.user})
+})
+
+// GET
 export const logoutUser = catchAsync(async (req, res) => {
     res.clearCookie("USER_REFRESH_TOKEN");
     res.clearCookie("USER_ACCESS_TOKEN");
+    res.status(200).json({success:true, message:"Cleared cookies"})
 })
 
 // GET

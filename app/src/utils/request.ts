@@ -22,12 +22,14 @@ export const request = async (method : "GET" | "POST" | "PUT"| "DELETE", url : s
         const result = await methods[method]();
         return {data:result.data, headers:result.headers, ok:true, serverError:false, message:result.data.message};
     } catch(err) {
-        if(err.code >= 500) {
+        const status = err.response?.status;
+
+        if(status >= 500) {
             return {data:err.response?.data, headers:err.response?.headers, ok:false, serverError:true, message:"SERVER_ERROR"};
         } else if(err.code == "ECONNABORTED") {
             return {data:err.response?.data, headers:err.response?.headers, ok:false, serverError:false, message:"NETWORK"};
         } else if (err.response) {
-            return {data:err.response?.data, headers:err.response?.headers, ok:false, serverError:false, message:err.response.errorMessage};
+            return {data:err.response?.data, headers:err.response?.headers, ok:false, serverError:false, message:err.response.data.errorMessage};
         } else if(err.request) {
             return {data:err.request, headers:err.request?.headers, ok:false, serverError:false, message:"BAD_REQUEST"};
         }

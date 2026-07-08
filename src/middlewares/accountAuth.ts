@@ -14,9 +14,9 @@ interface accountPayload extends JwtPayload {
 
 export const accountAuth = () => {
     const createAccessToken = (req : AuthenticatedAccountRequest, res : Response, next : NextFunction) => {
-        if(req.cookies["ACCOUNT_REFRESH_TOKEN"]) {
+        if(req.signedCookies["ACCOUNT_REFRESH_TOKEN"]) {
             try {
-                const decoded = verify(req.cookies["ACCOUNT_REFRESH_TOKEN"], process.env.REFRESH_TOKEN || "HHhbhvjjbioL") as accountPayload;
+                const decoded = verify(req.signedCookies["ACCOUNT_REFRESH_TOKEN"], process.env.REFRESH_TOKEN || "HHhbhvjjbioL") as accountPayload;
 
                 const {iat, exp, nbf, jti, ...sanitizedClaims} = decoded;
                 const accessToken = sign(sanitizedClaims, process.env.ACCESS_TOKEN || "JHj6hVKkPkj5yTknpLu4A", {
@@ -41,7 +41,7 @@ export const accountAuth = () => {
     return (req: AuthenticatedAccountRequest, res : Response, next : NextFunction) => {
         if(req.cookies["ACCOUNT_ACCESS_TOKEN"]) {
             try {
-                const decoded = verify(req.cookies["ACCOUNT_ACCESS_TOKEN"], process.env.ACCESS_TOKEN || "JHj6hVKkPkj5yTknpLu4A") as accountPayload;
+                const decoded = verify(req.signedCookies["ACCOUNT_ACCESS_TOKEN"], process.env.ACCESS_TOKEN || "JHj6hVKkPkj5yTknpLu4A") as accountPayload;
                 req.account = decoded;
                 next()
             } catch(err) {
