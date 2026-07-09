@@ -1,14 +1,17 @@
 import type { FC } from "react";
 import NavButton from "./NavButton";
-import type { User } from "../../pages/admin/AdminPanel";
 import { faBoxesPacking, faComment, faFile, faPieChart, faTruckFast, faUsers } from "@fortawesome/free-solid-svg-icons";
+import useUserStore from "../../stores/useUserStore";
 
 
 type Props = {
-    user:User
+    
 }
 
-const MainNavbar : FC<Props> = ({user}) => {
+const MainNavbar : FC<Props> = ({}) => {
+
+    const user = useUserStore((store) => store.user)
+
     return (
         <nav className="h-full min-w-25.75 max-w-25.75 flex flex-col overflow-y-auto bg-zinc-50">
             <NavButton href="/admin" title="dashboard" icon={faPieChart}/>

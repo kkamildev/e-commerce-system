@@ -6,6 +6,7 @@ import CreateAdminSection from "../../components/sections/CreateAdminSection";
 import LoginUserSection from "../../components/sections/LoginUserSection";
 import MainNavbar from "../../components/navigation/MainNavbar";
 import { Outlet } from "react-router-dom";
+import useUserStore from "../../stores/useUserStore";
 
 
 export type User = {
@@ -21,7 +22,10 @@ type Props = {
 const AdminPanel : FC<Props> = ({}) => {
     
     const [adminExist, setAdminExist] = useState<boolean>(true);
-    const [user, setUser] = useState<User>(null);
+
+    const user = useUserStore((store) => store.user);
+    const setUser = useUserStore((store) => store.setUser);
+
     const [config, setConfig] = useState(null);
 
     const logout = async () => {
@@ -58,7 +62,7 @@ const AdminPanel : FC<Props> = ({}) => {
     return(
         <PageLayout title="Admin Panel">
             {
-                !user ? (!adminExist ? <CreateAdminSection onCreate={checkAdminExist}/> : <LoginUserSection onLogin={setUser}/>) :
+                !user ? (!adminExist ? <CreateAdminSection onCreate={checkAdminExist}/> : <LoginUserSection/>) :
                 <section className="flex flex-col h-screen max-h-screen w-full overflow-hidden">
                     <header className="bg-indigo-600 flex flex-col lg:flex-row justify-center lg:justify-between">
                         <section className="flex items-center">
@@ -71,7 +75,7 @@ const AdminPanel : FC<Props> = ({}) => {
                         </section>
                     </header>
                     <main className="flex flex-1 min-h-0">
-                        <MainNavbar user={user}/>
+                        <MainNavbar/>
                         <Outlet/>
                     </main>
                 </section>

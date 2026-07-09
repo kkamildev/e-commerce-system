@@ -2,16 +2,18 @@ import { useEffect, type FC } from "react"
 import LoginUserForm from "../forms/LoginUserForm";
 import type { Result } from "../../layouts/FormLayout";
 import { request } from "../../utils/request";
-import type { User } from "../../pages/admin/AdminPanel";
+import useUserStore from "../../stores/useUserStore";
 
 
 
 type Props = {
-    onLogin:React.Dispatch<React.SetStateAction<User>>
+    
 }
 
 
-const LoginUserSection : FC<Props> = ({onLogin}) => {
+const LoginUserSection : FC<Props> = ({}) => {
+
+    const onLogin = useUserStore((store) => store.setUser);
 
     const autoLoginUser = async () => {
         const result = await request("POST", "/api/users/auto-login", {})
