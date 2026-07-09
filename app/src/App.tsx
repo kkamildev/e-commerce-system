@@ -1,7 +1,8 @@
 import type { FC } from "react";
 
 import {BrowserRouter, Routes, Route} from "react-router-dom"
-import AdminPanel from "./pages/AdminPanel";
+import AdminPanel from "./pages/admin/AdminPanel";
+import UsersPanel from "./pages/admin/UsersPanel";
 
 
 type Props = {
@@ -13,8 +14,8 @@ const App : FC<Props> = ({}) => {
         <BrowserRouter>
             <Routes>
                 <Route path="/admin" element={<AdminPanel/>}>
-                    <Route index element={<h1>Hello world</h1>}/>
-                    <Route path="users" element={<h1>Users</h1>}/>
+                    <Route index element={<h1>This is a dashboard</h1>}/>
+                    <Route path="users" element={<UsersPanel/>}/>
                 </Route>
 
 

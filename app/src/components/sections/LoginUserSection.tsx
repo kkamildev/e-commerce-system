@@ -2,7 +2,7 @@ import { useEffect, type FC } from "react"
 import LoginUserForm from "../forms/LoginUserForm";
 import type { Result } from "../../layouts/FormLayout";
 import { request } from "../../utils/request";
-import type { User } from "../../pages/AdminPanel";
+import type { User } from "../../pages/admin/AdminPanel";
 
 
 

@@ -24,10 +24,16 @@ export const request = async (method : "GET" | "POST" | "PUT"| "DELETE", url : s
     } catch(err) {
         const status = err.response?.status;
 
+        if(err.response?.data.unauthorized) {
+            return {data:err.response?.data, headers:err.response?.headers, ok:false, serverError:false, message:"UNAUTHORIZED"};
+        }
+        if(err.response?.data.forbidden) {
+            return {data:err.response?.data, headers:err.response?.headers, ok:false, serverError:false, message:"FORBIDDEN"};
+        }
         if(status >= 500) {
             return {data:err.response?.data, headers:err.response?.headers, ok:false, serverError:true, message:"SERVER_ERROR"};
         } else if(err.code == "ECONNABORTED") {
-            return {data:err.response?.data, headers:err.response?.headers, ok:false, serverError:false, message:"NETWORK"};
+            return {data:err.response?.data, headers:err.response?.headers, ok:false, serverError:false, message:"TIMEOUT"};
         } else if (err.response) {
             return {data:err.response?.data, headers:err.response?.headers, ok:false, serverError:false, message:err.response.data.errorMessage};
         } else if(err.request) {

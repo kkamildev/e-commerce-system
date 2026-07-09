@@ -134,7 +134,7 @@ export const getAllUsers = catchAsync(async (req, res) => {
             "email",
             "role"
         ],
-        order:["name"]
+        order:["username"]
     });
     res.status(200).json({success:true, message:"Got all users", users})
 });
