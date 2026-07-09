@@ -142,32 +142,42 @@ export const getAllUsers = catchAsync(async (req, res) => {
 // POST
 export const createNewUser = catchAsync(async (req, res) => {
     const {username, email, password, role} = req.body;
-    const passwordHash = bcrypt.hash(password, Number(process.env.BCRYPT_ROUNDS || 10));
-    const user = await User.create({
-        username,
-        email,
-        role,
-        password:passwordHash
-    });
-
-    res.status(201).json({success:true, message:"Created new user", insertId:user.id});
+    const emailExist = await User.count({where:{email}});
+    if(!emailExist) {
+        const passwordHash = await bcrypt.hash(password, Number(process.env.BCRYPT_ROUNDS || 10));
+        const user = await User.create({
+            username,
+            email,
+            role,
+            password:passwordHash
+        });
+    
+        res.status(201).json({success:true, message:"Created new user", insertId:user.id});
+    } else {
+        res.status(409).json({success:false, errorMessage:"User with this email already exist"})
+    }
 });
 
 // PUT
 export const updateUser = catchAsync(async (req, res) => {
     const {id, username, email, role} = req.body;
-
-    const [affectedRows] = await User.update({username, email, role}, {where:{id}});
-    if(affectedRows == 0) {
-        const exists = await User.count({ where: { id } });
-        if (!exists) {
-            res.status(404).json({success:false, errorMessage:"User not found"})
+    const emailExist = await User.count({where:{email}});
+    if(!emailExist) {
+        const [affectedRows] = await User.update({username, email, role}, {where:{id}});
+        if(affectedRows == 0) {
+            const exists = await User.count({ where: { id } });
+            if (!exists) {
+                res.status(404).json({success:false, errorMessage:"User not found"})
+            } else {
+                res.status(204);
+            }
         } else {
-            res.status(204);
+            res.status(200).json({success:true, message:"Updated user"})
         }
     } else {
-        res.status(200).json({success:true, message:"Updated user"})
+        res.status(409).json({success:false, errorMessage:"User with this email already exist"})
     }
+
 });
 
 // PUT
