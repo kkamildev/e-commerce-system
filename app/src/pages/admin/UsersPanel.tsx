@@ -7,6 +7,7 @@ import UserModel from "../../components/models/UserModel";
 import CreateUserForm from "../../components/forms/user/CreateUserForm";
 import type { Result } from "../../layouts/FormLayout";
 import UpdateUserForm from "../../components/forms/user/UpdateUserForm";
+import UpdateUserPasswordForm from "../../components/forms/user/UpdateUserPasswordForm";
 
 
 type Props = {
@@ -42,6 +43,19 @@ const UsersPanel : FC<Props> = ({}) => {
             email:formData.get("email"),
             username:formData.get("username"),
             role:formData.get("role")
+        });
+        if(result.ok) {
+            setForm(null);
+            return {ok:true, message:"Success", serverError:false}
+        } else {
+            return {ok:false, message:result.message, serverError:result.serverError}
+        }
+    }
+
+    const updateUserPassword = async (id:number, formData : FormData) => {
+        const result = await adminPanelRequest("PUT", "/api/users/password", {}, {
+            id,
+            newPassword:formData.get("password"),
         });
         if(result.ok) {
             setForm(null);
@@ -92,12 +106,16 @@ const UsersPanel : FC<Props> = ({}) => {
                             setForm("update")
                             setEditUser(userModel)
                         }}
+                        onPasswordUpdate={async (userModel) => {
+                            setForm("password_change")
+                            setEditUser(userModel)
+                        }}
                         />)
                     }
                 </section>
             </section>
             {
-                form == "create" && 
+                form &&
                 <section className="m-5 mb-10">
                     <section className="flex flex-col lg:flex-row justify-between gap-y-4">
                         <section className="flex flex-col">
@@ -108,27 +126,24 @@ const UsersPanel : FC<Props> = ({}) => {
                         </section>
                     </section>
                     <section className="flex justify-center items-center mt-10">
-                        <CreateUserForm onSubmit={async (formData) => {
-                            return await createUser(formData)
-                        }}/>
-                    </section>
-                </section>
-            }
-            {
-                form == "update" &&
-                <section className="m-5 mb-10">
-                    <section className="flex flex-col lg:flex-row justify-between gap-y-4">
-                        <section className="flex flex-col">
-                            <button onClick={() => setForm(null)} className="deny-btn text-xl"><FontAwesomeIcon icon={faCircleLeft}/> Back</button>
-                        </section>
-                        <section>
-                            
-                        </section>
-                    </section>
-                    <section className="flex justify-center items-center mt-10">
-                        <UpdateUserForm model={editUser} onSubmit={async (formData) => {
-                            return await updateUser(editUser.id, formData)
-                        }}/>
+                        {
+                            form == "create" && 
+                            <CreateUserForm onSubmit={async (formData) => {
+                                return await createUser(formData)
+                            }}/>
+                        }
+                        {
+                            form == "update" && 
+                            <UpdateUserForm model={editUser} onSubmit={async (formData) => {
+                                return await updateUser(editUser.id, formData)
+                            }}/>
+                        }
+                        {
+                            form == "password_change" && 
+                            <UpdateUserPasswordForm onSubmit={async (formData) => {
+                                return await updateUserPassword(editUser.id, formData)
+                            }}/>
+                        }
                     </section>
                 </section>
             }
