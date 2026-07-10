@@ -12,7 +12,8 @@ type Props = {
     type?:string
     onErrorChange?:(name : string, errorAppear : boolean) => void;
     icon?:IconDefinition,
-    required?:boolean
+    required?:boolean,
+    defaultValue?:string
 };
 
 const BasicInput: FC<Props> = ({
@@ -25,13 +26,23 @@ const BasicInput: FC<Props> = ({
     type = "text",
     icon,
     required = false,
+    defaultValue = ""
 }) => {
 
     useEffect(() => {
         if(required) {
             validate(inputRef.current.value || "")
         }
-    }, [required])
+    }, [required]);
+
+    useEffect(() => {
+        inputRef.current.value = defaultValue;
+        if(defaultValue) {
+            
+            validate(defaultValue);
+        }
+    }, [defaultValue])
+
     const inputRef = useRef<HTMLInputElement>(null);
     const [errorMessage, setErrorMessage] = useState("");
     const [passwordVisible, setPasswordVisible] = useState<boolean>(false);

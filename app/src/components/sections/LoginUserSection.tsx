@@ -1,5 +1,5 @@
 import { useEffect, type FC } from "react"
-import LoginUserForm from "../forms/LoginUserForm";
+import LoginUserForm from "../forms/user/LoginUserForm";
 import type { Result } from "../../layouts/FormLayout";
 import { request } from "../../utils/request";
 import useUserStore from "../../stores/useUserStore";

@@ -138,7 +138,7 @@ export const updateAccount = catchAsync(async (req : AuthenticatedAccountRequest
         if (!exists) {
             res.status(404).json({success:false, errorMessage:"Account not found"})
         } else {
-            res.status(204);
+            res.status(204).json({success:true});
         }
     } else {
         res.status(200).json({success:true, message:"Updated account"});

@@ -1,18 +1,20 @@
 import { useState, type FC } from "react";
-import BasicInput from "../inputs/BasicInput";
-import type { Result } from "../../layouts/FormLayout";
-import FormLayout from "../../layouts/FormLayout";
-import { faAddressBook, faEnvelope, faLock, faUser, faUserPlus } from "@fortawesome/free-solid-svg-icons";
-import SelectInput from "../inputs/SelectInput";
+import BasicInput from "../../inputs/BasicInput";
+import type { Result } from "../../../layouts/FormLayout";
+import FormLayout from "../../../layouts/FormLayout";
+import { faAddressBook, faEnvelope, faPen, faUser} from "@fortawesome/free-solid-svg-icons";
+import SelectInput from "../../inputs/SelectInput";
+import type { UserModelType } from "../../models/UserModel";
 
 
 type Props = {
 
     onSubmit:(formData : FormData) => Promise<Result>,
+    model:UserModelType
 }
 
 
-const CreateUserForm : FC<Props> = ({onSubmit}) => {
+const UpdateUserForm : FC<Props> = ({onSubmit, model}) => {
 
     const [errors, setErrors] = useState<any>();
     const [pending, setPending] = useState<boolean>();
@@ -21,20 +23,15 @@ const CreateUserForm : FC<Props> = ({onSubmit}) => {
 
     const submit = async (e : React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if(errors && Object.keys(errors).length == 5) {
+        if(errors && Object.keys(errors).length == 3) {
             if(Object.values(errors).every((error) => !error)) {
                 setPending(true);
                 // logic
                 const formData = new FormData(e.target);
-
-                if(formData.get("password") == formData.get("passwordRepeated")){
-                    const result : Result = await onSubmit(formData);
-                    setResult(result);
-                    if(result.ok) {
-                        e.target.reset();
-                    }
-                } else {
-                    setResult({ok:false, message:"Passwords are not the same", serverError:false})
+                const result : Result = await onSubmit(formData);
+                setResult(result);
+                if(result.ok) {
+                    e.target.reset();
                 }
                 setPending(false);
             }
@@ -44,9 +41,9 @@ const CreateUserForm : FC<Props> = ({onSubmit}) => {
     }
 
     return (
-        <FormLayout onSubmit={submit} pending={pending} result={result} title="Register User" submitText="Register" submitIcon={faUserPlus}>
+        <FormLayout onSubmit={submit} pending={pending} result={result} title="Update User" submitText="Update" submitIcon={faPen}>
             <section className="flex flex-col lg:flex-row justify-center">
-                <BasicInput name="username" title="Username" placeholder="e.g. Jan Kowalski"
+                <BasicInput name="username" title="Username" placeholder="e.g. Jan Kowalski" defaultValue={model.username}
                     regexp={[
                         /^.{3,}$/,
                         /^.{0,50}$/,
@@ -61,23 +58,9 @@ const CreateUserForm : FC<Props> = ({onSubmit}) => {
                     onErrorChange={(name, error) => setErrors((prev) => ({...prev, [name]:error}))}
                     required={required}
                 />
-                <BasicInput name="password" title="Password" placeholder="e.g. 123456"
-                    regexp={[
-                        /^.{8,}$/s,
-                        /^.{1,72}$/s
-                    ]}
-                    errorMessages={[
-                        "Min 8 characters",
-                        "Too long"
-                    ]}
-                    icon={faLock}
-                    onErrorChange={(name, error) => setErrors((prev) => ({...prev, [name]:error}))}
-                    required={required}
-                    type="password"
-                />
             </section>
             <section className="flex flex-col-reverse lg:flex-row justify-center">
-                <BasicInput name="email" title="Email" placeholder="e.g. kowalski@gmail.com"
+                <BasicInput name="email" title="Email" placeholder="e.g. kowalski@gmail.com" defaultValue={model.email}
                     regexp={[
                         /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                         /^.{1,75}$/s
@@ -90,23 +73,9 @@ const CreateUserForm : FC<Props> = ({onSubmit}) => {
                     onErrorChange={(name, error) => setErrors((prev) => ({...prev, [name]:error}))}
                     required={required}
                 />
-                <BasicInput name="passwordRepeated" title="Repeat password" placeholder="e.g. 123456"
-                    regexp={[
-                        /^.{8,}$/s,
-                        /^.{1,72}$/s
-                    ]}
-                    errorMessages={[
-                        "Min 8 characters",
-                        "Too long"
-                    ]}
-                    icon={faLock}
-                    onErrorChange={(name, error) => setErrors((prev) => ({...prev, [name]:error}))}
-                    required={required}
-                    type="password"
-                />
             </section>
             <section className="flex flex-col lg:flex-row justify-center">
-                <SelectInput name="role" title="Select role" placeholder="User role"
+                <SelectInput name="role" title="Select role" placeholder="User role" defaultValue={model.role}
                     icon={faAddressBook}
                     onErrorChange={(name, error) => setErrors((prev) => ({...prev, [name]:error}))}
                     required={required}
@@ -123,4 +92,4 @@ const CreateUserForm : FC<Props> = ({onSubmit}) => {
     )
 }
 
-export default CreateUserForm;
+export default UpdateUserForm;

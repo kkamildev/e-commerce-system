@@ -4,6 +4,7 @@ import { sign } from "jsonwebtoken"
 import bcrypt from "bcrypt"
 import { AuthenticatedUserRequest } from "../utils/interfaces";
 import { Response } from "express";
+import { Op } from "sequelize";
 
 // GET
 export const checkAdminExist = catchAsync( async (req, res) => {
@@ -161,7 +162,14 @@ export const createNewUser = catchAsync(async (req, res) => {
 // PUT
 export const updateUser = catchAsync(async (req, res) => {
     const {id, username, email, role} = req.body;
-    const emailExist = await User.count({where:{email}});
+    const emailExist = await User.count({
+        where:{
+            email,
+            id:{
+                [Op.ne]:id
+            }
+        }
+    });
     if(!emailExist) {
         const [affectedRows] = await User.update({username, email, role}, {where:{id}});
         if(affectedRows == 0) {
@@ -169,7 +177,7 @@ export const updateUser = catchAsync(async (req, res) => {
             if (!exists) {
                 res.status(404).json({success:false, errorMessage:"User not found"})
             } else {
-                res.status(204);
+                res.status(204).json({success:true});
             }
         } else {
             res.status(200).json({success:true, message:"Updated user"})
@@ -193,7 +201,7 @@ export const updateUserPassword = catchAsync(async (req, res) => {
         if (!exists) {
             res.status(404).json({success:false, errorMessage:"User not found"})
         } else {
-            res.status(204);
+            res.status(204).json({success:true});;
         }
     } else {
         res.status(200).json({success:true, message:"Updated user"});

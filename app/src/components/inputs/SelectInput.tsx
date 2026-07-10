@@ -19,6 +19,7 @@ type Props = {
     onErrorChange?:(name : string, errorAppear : boolean) => void;
     icon?:IconDefinition,
     required?:boolean,
+    defaultValue?:string
     options:Option[]
 };
 
@@ -30,14 +31,23 @@ const SelectInput: FC<Props> = ({
     type = "text",
     icon,
     required = false,
-    options
+    options,
+    defaultValue = ""
 }) => {
 
     useEffect(() => {
         if(required) {
             validate(input || "")
         }
-    }, [required])
+    }, [required]);
+
+    useEffect(() => {
+        inputRef.current.value = defaultValue;
+        if(defaultValue) {
+            validate(options.find((option) => defaultValue == option.value)?.title || "");
+        }
+    }, [defaultValue])
+
     const inputRef = useRef<HTMLInputElement>(null);
     const [errorMessage, setErrorMessage] = useState("");
     const [input, setInput] = useState<string>("");

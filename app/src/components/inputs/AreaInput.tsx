@@ -11,7 +11,8 @@ type Props = {
     errorMessages?: string[];
     onErrorChange?:(name : string, errorAppear : boolean) => void;
     icon?:IconDefinition,
-    required?:boolean
+    required?:boolean,
+    defaultValue?:string
 };
 
 const AreaInput: FC<Props> = ({
@@ -23,6 +24,7 @@ const AreaInput: FC<Props> = ({
     onErrorChange,
     icon,
     required = false,
+    defaultValue = ""
 }) => {
 
     useEffect(() => {
@@ -30,6 +32,16 @@ const AreaInput: FC<Props> = ({
             validate(inputRef.current.value || "")
         }
     }, [required])
+
+    useEffect(() => {
+        inputRef.current.value = defaultValue;
+        if(defaultValue) {
+            
+            validate(defaultValue);
+        }
+    }, [defaultValue])
+
+
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const [errorMessage, setErrorMessage] = useState("");
     

@@ -1,5 +1,5 @@
 
-import { faPen, faTrashCan, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faLock, faPen, faTrashCan, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { FC } from "react";
 import useWarningStore from "../../stores/useWarningStore";
@@ -10,10 +10,11 @@ export type UserModelType = {
     username:string,
     email:string,
     role:string,
-    onDelete:(id : number) => Promise<void>
+    onDelete?:(id : number) => Promise<void>,
+    onUpdate?:(model : UserModelType) => Promise<void>
 }
 
-const UserModel : FC<UserModelType> = ({id, username, email, role, onDelete}) => {
+const UserModel : FC<UserModelType> = ({id, username, email, role, onDelete, onUpdate}) => {
 
     const prepare = useWarningStore((store) => store.prepare);
 
@@ -32,7 +33,8 @@ const UserModel : FC<UserModelType> = ({id, username, email, role, onDelete}) =>
 
             <p className={`${roleFormats[role].color} text-lg p-2 rounded-lg font-bold text-white`}>{roleFormats[role].title}</p>
             <section className="flex flex-col lg:flex-row gap-3 mt-5">
-                <button className="primary-btn"><FontAwesomeIcon icon={faPen}/> Edit user</button>
+                <button className="primary-btn"><FontAwesomeIcon icon={faLock}/> Change password</button>
+                <button onClick={() => onUpdate({id, username, email, role})} className="primary-btn"><FontAwesomeIcon icon={faPen}/> Edit user</button>
                 {
                     role != "Admin" &&
                     <button className="deny-btn" onClick={() => {

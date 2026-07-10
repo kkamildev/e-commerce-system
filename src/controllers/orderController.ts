@@ -52,7 +52,7 @@ export const createOrder = catchAsync(async (req, res) => {
                 const emailInfo = await sendOrderConfirmationEmail(result[0].email, result[0].personName, result[0].personSurname, result);
                 res.status(201).json({success:true, message:"Created order", insertId:result[0].id});
             } else {
-                res.status(204);
+                res.status(204).json({success:true});
             }
         }
     } else {
@@ -115,7 +115,7 @@ export const createOrderUsingAccount = catchAsync(async (req : AuthenticatedAcco
                 const emailInfo = await sendOrderConfirmationEmail(result[0].email, result[0].personName, result[0].personSurname, result);
                 res.status(201).json({success:true, message:"Created order", insertId:result[0].id});
             } else {
-                res.status(204);
+                res.status(204).json({success:true});
             }
         }
     } else {
@@ -186,7 +186,7 @@ export const updateOrderStatus = catchAsync(async (req, res) => {
         if (!exists) {
             res.status(404).json({success:false, errorMessage:"Order not found"})
         } else {
-            res.status(204);
+            res.status(204).json({success:true});
         }
     } else {
         res.status(200).json({success:true, message:"Updated Order"});

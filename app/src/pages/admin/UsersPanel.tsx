@@ -4,8 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleLeft, faPlus, faRefresh } from "@fortawesome/free-solid-svg-icons";
 import type { UserModelType } from "../../components/models/UserModel";
 import UserModel from "../../components/models/UserModel";
-import CreateUserForm from "../../components/forms/CreateUserForm";
+import CreateUserForm from "../../components/forms/user/CreateUserForm";
 import type { Result } from "../../layouts/FormLayout";
+import UpdateUserForm from "../../components/forms/user/UpdateUserForm";
 
 
 type Props = {
@@ -18,12 +19,28 @@ const UsersPanel : FC<Props> = ({}) => {
 
     const [users, setUsers] = useState<UserModelType[]>([]);
     const [form, setForm] = useState<string>(null);
+    const [editUser, setEditUser] = useState<UserModelType>(null);
 
     const createUser = async (formData : FormData) : Promise<Result> => {
         const result = await adminPanelRequest("POST", "/api/users", {}, {
             email:formData.get("email"),
             username:formData.get("username"),
             password:formData.get("password"),
+            role:formData.get("role")
+        });
+        if(result.ok) {
+            setForm(null);
+            return {ok:true, message:"Success", serverError:false}
+        } else {
+            return {ok:false, message:result.message, serverError:result.serverError}
+        }
+    }
+
+    const updateUser = async (id:number, formData : FormData) => {
+        const result = await adminPanelRequest("PUT", "/api/users", {}, {
+            id,
+            email:formData.get("email"),
+            username:formData.get("username"),
             role:formData.get("role")
         });
         if(result.ok) {
@@ -55,7 +72,7 @@ const UsersPanel : FC<Props> = ({}) => {
 
 
     return (
-        <section className="overflow-y-scroll h-full pb-5 flex-1 min-h-0">
+        <section className="overflow-y-scroll h-full pb-10 flex-1 min-h-0">
             <section className={`${form && "hidden"} m-5 mb-10`}>
                 <section className="flex flex-col-reverse lg:flex-row justify-between gap-y-4">
                     <section className="flex flex-col">
@@ -69,7 +86,13 @@ const UsersPanel : FC<Props> = ({}) => {
                 </section>
                 <section className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 mt-15 mx-5 gap-x-10 gap-y-15">
                     {
-                        users.map((user) => <UserModel key={user.id} id={user.id} email={user.email} role={user.role} username={user.username} onDelete={deleteUser}/>)
+                        users.map((user) => <UserModel key={user.id} id={user.id} email={user.email} role={user.role} username={user.username}
+                        onDelete={deleteUser}
+                        onUpdate={async (userModel) => {
+                            setForm("update")
+                            setEditUser(userModel)
+                        }}
+                        />)
                     }
                 </section>
             </section>
@@ -87,6 +110,24 @@ const UsersPanel : FC<Props> = ({}) => {
                     <section className="flex justify-center items-center mt-10">
                         <CreateUserForm onSubmit={async (formData) => {
                             return await createUser(formData)
+                        }}/>
+                    </section>
+                </section>
+            }
+            {
+                form == "update" &&
+                <section className="m-5 mb-10">
+                    <section className="flex flex-col lg:flex-row justify-between gap-y-4">
+                        <section className="flex flex-col">
+                            <button onClick={() => setForm(null)} className="deny-btn text-xl"><FontAwesomeIcon icon={faCircleLeft}/> Back</button>
+                        </section>
+                        <section>
+                            
+                        </section>
+                    </section>
+                    <section className="flex justify-center items-center mt-10">
+                        <UpdateUserForm model={editUser} onSubmit={async (formData) => {
+                            return await updateUser(editUser.id, formData)
                         }}/>
                     </section>
                 </section>

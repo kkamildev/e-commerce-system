@@ -28,7 +28,7 @@ export const updateProductVariant = catchAsync(async (req, res) => {
         if (!exists) {
             res.status(404).json({success:false, errorMessage:"Product variant not found"})
         } else {
-            res.status(204);
+            res.status(204).json({success:true});
         }
     } else {
         res.status(200).json({success:true, message:"Updated product variant"});
