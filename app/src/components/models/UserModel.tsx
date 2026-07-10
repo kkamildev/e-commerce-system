@@ -2,22 +2,26 @@
 import { faPen, faTrashCan, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { FC } from "react";
+import useWarningStore from "../../stores/useWarningStore";
 
 
 export type UserModelType = {
     id:number,
     username:string,
     email:string,
-    role:string
+    role:string,
+    onDelete:(id : number) => Promise<void>
 }
 
-const UserModel : FC<UserModelType> = ({id, username, email, role}) => {
+const UserModel : FC<UserModelType> = ({id, username, email, role, onDelete}) => {
+
+    const prepare = useWarningStore((store) => store.prepare);
 
     const roleFormats = {
-        "Admin":"bg-red-600",
-        "Product_manager":"bg-orange-600",
-        "Sales_manager":"bg-green-600",
-        "Producer":"bg-indigo-600"
+        "Admin":{color: "bg-red-600", title:"Admin"},
+        "Product_manager":{color: "bg-orange-600", title:"Product Manager"},
+        "Sales_manager":{color: "bg-green-600", title:"Sales Manager"},
+        "Producer":{color: "bg-indigo-600", title:"Producer"}
     }
 
     return (
@@ -26,10 +30,15 @@ const UserModel : FC<UserModelType> = ({id, username, email, role}) => {
             <h4 className="text-xl font-bold text-zinc-700">{username}</h4>
             <h4 className="text-lg font-bold text-zinc-700">Email: {email}</h4>
 
-            <p className={`${roleFormats[role]} text-lg p-2 rounded-lg font-bold text-white`}>{role}</p>
+            <p className={`${roleFormats[role].color} text-lg p-2 rounded-lg font-bold text-white`}>{roleFormats[role].title}</p>
             <section className="flex flex-col lg:flex-row gap-3 mt-5">
                 <button className="primary-btn"><FontAwesomeIcon icon={faPen}/> Edit user</button>
-                <button className="deny-btn"><FontAwesomeIcon icon={faTrashCan}/>Delete user</button>
+                {
+                    role != "Admin" &&
+                    <button className="deny-btn" onClick={() => {
+                        prepare("Do you want delete this user?", () => onDelete(id), () => {})
+                    }}><FontAwesomeIcon icon={faTrashCan}/>Delete user</button>
+                }
             </section>
         </section>
     )

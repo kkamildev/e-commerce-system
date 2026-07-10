@@ -205,10 +205,17 @@ export const updateUserPassword = catchAsync(async (req, res) => {
 export const deleteUser = catchAsync(async (req, res) => {
     const {id} = req.body;
 
-    const deleted = await User.destroy({where:{id}});
-    if(!deleted) {
-        res.status(404).json({success:false, errorMessage:"User not found"})
+    const isAdmin = await User.count({where:{id, role:"Admin"}});
+
+    if(!isAdmin) {
+        const deleted = await User.destroy({where:{id}});
+        if(!deleted) {
+            res.status(404).json({success:false, errorMessage:"User not found"})
+        } else {
+            res.status(200).json({success:true, message:"deleted user"});
+        }
     } else {
-        res.status(200).json({success:true, message:"deleted user"});
+        res.status(400).json({success:false, errorMessage:"You can't delete admin"})
     }
+
 });

@@ -100,7 +100,7 @@ const FileInput: FC<Props> = ({
             icon && 
             <FontAwesomeIcon
                 icon={icon}
-                className="text-2xl p-3 text-zinc-500 font-bold"
+                className="text-xl lg:text-2xl p-3 text-zinc-500 font-bold"
             />
         }
 
@@ -108,7 +108,7 @@ const FileInput: FC<Props> = ({
             <p className="font-bold text-zinc-500 text-lg">{title}</p>
             <input multiple={maxFilesCount > 1} ref={inputRef} type="file" name={name} id={name} onChange={(e) => validate(e.target.files)} className="hidden" />
             {
-                !files && <p className="text-gray-400 font-bold m-1 text-xl">{placeholder}</p>
+                !files && <p className="text-gray-400 font-bold m-1 text-lg lg:text-xl">{placeholder}</p>
             }
             <section className="flex flex-col items-center justify-center">
             {
@@ -122,10 +122,10 @@ const FileInput: FC<Props> = ({
                 setFiles(null);
                 onErrorChange && onErrorChange(name, false);
                 setErrorMessage("");
-            }}><FontAwesomeIcon className="text-2xl cursor-pointer text-zinc-500 ml-3" icon={faCancel}/></button>
+            }}><FontAwesomeIcon className="text-xl lg:text-2xl cursor-pointer text-zinc-500 ml-3" icon={faCancel}/></button>
         }
         </label>
-        <p className={`${errorMessage || "invisible"} text-red-600 font-bold text-xl pt-1 pl-1`}>{errorMessage && <FontAwesomeIcon icon={faCircleExclamation} className="pr-1"/>}{errorMessage || "Error message here"}</p>
+        <p className={`${errorMessage || "invisible"} text-red-600 font-bold text-lg lg:text-xl pt-1 pl-1`}>{errorMessage && <FontAwesomeIcon icon={faCircleExclamation} className="pr-1"/>}{errorMessage || "Error message here"}</p>
     </section>
     );
 };

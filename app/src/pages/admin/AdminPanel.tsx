@@ -5,7 +5,7 @@ import { request } from "../../utils/request";
 import CreateAdminSection from "../../components/sections/CreateAdminSection";
 import LoginUserSection from "../../components/sections/LoginUserSection";
 import MainNavbar from "../../components/navigation/MainNavbar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import useUserStore from "../../stores/useUserStore";
 
 
@@ -20,6 +20,8 @@ type Props = {
 }
 
 const AdminPanel : FC<Props> = ({}) => {
+
+    const navigate = useNavigate();
     
     const [adminExist, setAdminExist] = useState<boolean>(true);
 
@@ -32,6 +34,7 @@ const AdminPanel : FC<Props> = ({}) => {
         const result = await request("GET", "/api/users/logout", {timeout:5000})
         if(result.ok) {
             setUser(null);
+            navigate("/admin");
         }
     }
 

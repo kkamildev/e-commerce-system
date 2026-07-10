@@ -34,6 +34,13 @@ const UsersPanel : FC<Props> = ({}) => {
         }
     }
 
+    const deleteUser = async (id : number) => {
+        const result = await adminPanelRequest("DELETE", "/api/users", {data:{id}}, {})
+        if(result.ok) {
+            setUsers((prev) => prev.filter((user) => user.id != id))
+        }
+    }
+
     const getUsers = async () => {
         const result = await adminPanelRequest("GET", "/api/users", {timeout:5000});
         if(result.ok) {
@@ -62,7 +69,7 @@ const UsersPanel : FC<Props> = ({}) => {
                 </section>
                 <section className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 mt-15 mx-5 gap-x-10 gap-y-15">
                     {
-                        users.map((user) => <UserModel key={user.id} id={user.id} email={user.email} role={user.role} username={user.username}/>)
+                        users.map((user) => <UserModel key={user.id} id={user.id} email={user.email} role={user.role} username={user.username} onDelete={deleteUser}/>)
                     }
                 </section>
             </section>

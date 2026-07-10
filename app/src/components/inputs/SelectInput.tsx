@@ -68,7 +68,7 @@ const SelectInput: FC<Props> = ({
             icon && 
             <FontAwesomeIcon
                 icon={icon}
-                className="text-2xl p-3 text-zinc-500 font-bold"
+                className="text-xl lg:text-2xl p-3 text-zinc-500 font-bold"
             />
         }
 
@@ -80,7 +80,7 @@ const SelectInput: FC<Props> = ({
                 placeholder={placeholder}
                 type={passwordVisible ? "text" : type}
                 id={name}
-                className="placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-0 py-1 font-bold text-xl"
+                className="placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-0 py-1 font-bold lg:text-xl"
                 onChange={(e) => validate(e.target.value)}
                 onBlur={() => setFocus(false)}
                 value={input}
@@ -98,10 +98,10 @@ const SelectInput: FC<Props> = ({
             }
         </section>
         {
-            type == "password" && <button type="button" onClick={() => setPasswordVisible(!passwordVisible)}><FontAwesomeIcon className="text-2xl cursor-pointer text-zinc-500" icon={passwordVisible ? faEyeSlash : faEye}/></button>
+            type == "password" && <button type="button" onClick={() => setPasswordVisible(!passwordVisible)}><FontAwesomeIcon className="text-xl lg:text-2xl cursor-pointer text-zinc-500" icon={passwordVisible ? faEyeSlash : faEye}/></button>
         }
         </label>
-        <p className={`${errorMessage || "invisible"} text-red-600 font-bold text-xl pt-1 pl-1`}>{errorMessage && <FontAwesomeIcon icon={faCircleExclamation} className="pr-1"/>}{errorMessage || "Error message here"}</p>
+        <p className={`${errorMessage || "invisible"} text-red-600 font-bold text-lg lg:text-xl pt-1 pl-1`}>{errorMessage && <FontAwesomeIcon icon={faCircleExclamation} className="pr-1"/>}{errorMessage || "Error message here"}</p>
     </section>
     );
 };
