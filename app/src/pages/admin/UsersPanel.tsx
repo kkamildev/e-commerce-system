@@ -8,6 +8,8 @@ import CreateUserForm from "../../components/forms/user/CreateUserForm";
 import type { Result } from "../../layouts/FormLayout";
 import UpdateUserForm from "../../components/forms/user/UpdateUserForm";
 import UpdateUserPasswordForm from "../../components/forms/user/UpdateUserPasswordForm";
+import SearchInput from "../../components/inputs/SearchInput";
+import { useSearchParams } from "react-router-dom";
 
 
 type Props = {
@@ -17,10 +19,12 @@ type Props = {
 
 const UsersPanel : FC<Props> = ({}) => {
     const adminPanelRequest = useAdminPanelRequest();
+    const [searchParams] = useSearchParams();
 
     const [users, setUsers] = useState<UserModelType[]>([]);
     const [form, setForm] = useState<string>(null);
     const [editUser, setEditUser] = useState<UserModelType>(null);
+    
 
     const createUser = async (formData : FormData) : Promise<Result> => {
         const result = await adminPanelRequest("POST", "/api/users", {}, {
@@ -78,6 +82,12 @@ const UsersPanel : FC<Props> = ({}) => {
             setUsers(result.data.users as UserModelType[])
         }
     }
+
+    const searchFilter = (user : UserModelType) : boolean => {
+        return user.username.toLowerCase().includes(searchParams.get("s")?.toLowerCase() || "") ||
+        user.email.toLowerCase().includes(searchParams.get("s")?.toLowerCase() || "");
+    }
+
     useEffect(() => {
         if(!form) {
             getUsers();
@@ -91,7 +101,10 @@ const UsersPanel : FC<Props> = ({}) => {
                 <section className="flex flex-col-reverse lg:flex-row justify-between gap-y-4">
                     <section className="flex flex-col">
                         <h1 className="font-bold text-3xl text-zinc-800">Store Users</h1>
-                        <h2 className="font-bold text-xl text-zinc-600">Found: {users.length}</h2>
+                        <h2 className="font-bold text-xl text-zinc-600">Found: {users.filter((user) => searchFilter(user)).length}</h2>
+                    </section>
+                    <section className="flex flex-col">
+                        <SearchInput id="search" searchParamName="s" placeholder="Search..."/>
                     </section>
                     <section>
                         <button onClick={() => setForm("create")} className="primary-btn"><FontAwesomeIcon icon={faPlus}/> Create new</button>
@@ -100,7 +113,8 @@ const UsersPanel : FC<Props> = ({}) => {
                 </section>
                 <section className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 mt-15 mx-5 gap-x-10 gap-y-15">
                     {
-                        users.map((user) => <UserModel key={user.id} id={user.id} email={user.email} role={user.role} username={user.username}
+                        users.filter((user) => searchFilter(user))
+                        .map((user) => <UserModel key={user.id} id={user.id} email={user.email} role={user.role} username={user.username}
                         onDelete={deleteUser}
                         onUpdate={async (userModel) => {
                             setForm("update")
