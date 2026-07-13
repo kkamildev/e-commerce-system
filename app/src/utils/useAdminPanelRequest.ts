@@ -8,7 +8,8 @@ export const useAdminPanelRequest = () => {
     const navigate = useNavigate();
 
     const setUnauthorized = useErrorStore((store) => store.setUnauthorized);
-    const setServerError = useErrorStore((store) => store.setSeverError);
+    const setServerError = useErrorStore((store) => store.setServerError);
+    const setNetworkError = useErrorStore((store) => store.setNetworkError);
     const setUser = useUserStore((store) => store.setUser);
 
     const adminPanelRequest = async (
@@ -25,6 +26,8 @@ export const useAdminPanelRequest = () => {
         } else if (result.message === "FORBIDDEN") {
             setUnauthorized("You have no permission");
             navigate("/admin");
+        } else if(result.message == "TIMEOUT") {
+            setNetworkError("Internet connection Error")
         } else if(result.serverError) {
             setServerError("Unexpected Server Error");
         }
