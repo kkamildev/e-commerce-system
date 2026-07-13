@@ -24,7 +24,7 @@ export const getBanner = catchAsync(async (req, res) => {
         }
     };
     if(!fs.existsSync(destination)) {
-        res.status(200).json({success:false, errorMessage:"banner not found"})
+        res.status(404).json({success:false, errorMessage:"banner not found"})
     } else {
         res.status(200).sendFile(destination, options);
     }
@@ -64,7 +64,6 @@ export const uploadLogo = catchAsync(async (req : MulterRequest, res) => {
     }
 })
 
-// POST
 export const createConfig = catchAsync(async (req, res) => {
 
     const {storeName, storeDescription, mainPageTitle, mainPageSubtitle} = req.body;

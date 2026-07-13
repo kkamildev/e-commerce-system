@@ -3,7 +3,8 @@ import { createConfig, getBanner, getConfig, getLogo, updateConfig, uploadBanner
 import { createValidator, updateValidator } from "../validators/configValidators";
 import { userAuth } from "../middlewares/userAuth";
 import { userRoleAuth } from "../middlewares/userRoleAuth";
-import { upload } from "../storage/storeBannerUpload";
+import { upload as bannerUpload} from "../storage/storeBannerUpload";
+import { upload as logoUpload} from "../storage/storeLogoUpload"
 
 
 const router = Router();
@@ -21,9 +22,9 @@ router.get("/", getConfig);
 router.use(userAuth());
 router.use(userRoleAuth(["Admin"]))
 
-router.post("/banner", upload.single("file"), uploadBanner);
+router.post("/banner", bannerUpload.single("file"), uploadBanner);
 
-router.post("/logo", upload.single("file"), uploadLogo);
+router.post("/logo", logoUpload.single("file"), uploadLogo);
 
 
 router.put("/", updateValidator, updateConfig);

@@ -1,7 +1,7 @@
 import { useState, type FC } from "react";
 import AdminRegisterForm from "../forms/user/AdminRegisterForm";
 import type { Result } from "../../layouts/FormLayout";
-import SetupStoreForm from "../forms/SetupStoreForm";
+import SetupStoreForm from "../forms/config/SetupStoreForm";
 import BaseConfirmation from "../confirmations/BaseConfirmation";
 import { request } from "../../utils/request";
 

@@ -31,14 +31,14 @@ const storage = multer.diskStorage({
 export const upload = multer({
     storage,
     fileFilter(req, file, callback) {
-        const filetypes = /jpg/;
+        const filetypes = /jpeg|jpg/; 
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
         const mimetype = filetypes.test(file.mimetype);
 
         if (extname && mimetype) {
             return callback(null, true);
         } else {
-            callback(new Error("Only .jpg files are allowed"));
+            callback(new Error("Only .jpeg files are allowed"));
         }
     },
     limits:{

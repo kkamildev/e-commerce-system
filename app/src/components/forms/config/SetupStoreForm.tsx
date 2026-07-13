@@ -1,9 +1,9 @@
 import { useState, type FC } from "react";
-import BasicInput from "../inputs/BasicInput";
-import type { Result } from "../../layouts/FormLayout";
-import FormLayout from "../../layouts/FormLayout";
+import BasicInput from "../../inputs/BasicInput";
+import type { Result } from "../../../layouts/FormLayout";
+import FormLayout from "../../../layouts/FormLayout";
 import { faCircleArrowRight, faFile, faHeading, faStore} from "@fortawesome/free-solid-svg-icons";
-import AreaInput from "../inputs/AreaInput";
+import AreaInput from "../../inputs/AreaInput";
 
 
 type Props = {
