@@ -76,7 +76,7 @@ const FileInput: FC<Props> = ({
             } else {
                 if(required) {
                     onErrorChange && onErrorChange(name, true);
-                    setErrorMessage("Too big");
+                    setErrorMessage("Too large");
                 }
                 return;
             }

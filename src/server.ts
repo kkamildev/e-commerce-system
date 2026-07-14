@@ -23,7 +23,7 @@ import opinionRouter from "./routes/opinions.routes"
 import orderRouter from "./routes/orders.routes"
 import productRouter from "./routes/products.routes"
 import productPropertiesRouter from "./routes/productsProperties.routes"
-import productVariantsRouter from "./routes/productsProperties.routes"
+import productVariantsRouter from "./routes/productsVariants.routes"
 
 
 const appRequestsLimit = rateLimit({

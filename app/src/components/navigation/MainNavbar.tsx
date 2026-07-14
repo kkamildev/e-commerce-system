@@ -26,7 +26,12 @@ const MainNavbar : FC<Props> = ({}) => {
                         <NavButton href="/admin/config" title="Config" icon={faFile}/>
                     </>
                 }
-                <NavButton href="/admin/products" title="Products" icon={faBoxesPacking}/>
+                {
+                    user.role != "Producer" &&
+                    <>
+                        <NavButton href="/admin/products" title="Products" icon={faBoxesPacking}/>
+                    </>
+                }
                 <NavButton href="/admin/orders" title="Orders" icon={faTruckFast}/>
                 <NavButton href="/admin/comments" title="Comments" icon={faComment}/>
             </nav>

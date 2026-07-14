@@ -42,6 +42,7 @@ const UploadConfigFilesForm : FC<Props> = ({onSubmit}) => {
             <section className="flex flex-col lg:flex-row justify-center items-center gap-6">
                 <FileInput name="logo" title="Store logo" placeholder="PNG Max 20MB"
                     icon={faFile}
+                    maxSizeMb={20}
                     onErrorChange={(name, error) => setErrors((prev) => ({ ...prev, [name]: error }))}
                     required={required}
                     mediaType={"image/png"}
@@ -51,6 +52,7 @@ const UploadConfigFilesForm : FC<Props> = ({onSubmit}) => {
             <section className="flex flex-col lg:flex-row justify-center items-center gap-6 mt-10">
                 <FileInput name="banner" title="Store banner" placeholder="JPG Max 20MB"
                     icon={faFile}
+                    maxSizeMb={20}
                     onErrorChange={(name, error) => setErrors((prev) => ({ ...prev, [name]: error }))}
                     required={required}
                     mediaType={"image/jpeg"}
