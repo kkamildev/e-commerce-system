@@ -120,8 +120,7 @@ const FileInput: FC<Props> = ({
             files && <button type="button" onClick={() => {
                 inputRef.current.files = null;
                 setFiles(null);
-                onErrorChange && onErrorChange(name, false);
-                setErrorMessage("");
+                validate(null);
             }}><FontAwesomeIcon className="text-xl lg:text-2xl cursor-pointer text-zinc-500 ml-3" icon={faCancel}/></button>
         }
         </label>
