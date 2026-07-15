@@ -20,7 +20,8 @@ type Props = {
     icon?:IconDefinition,
     required?:boolean,
     defaultValue?:string
-    options:Option[]
+    options:Option[],
+    performValidation?:boolean
 };
 
 const SelectInput: FC<Props> = ({
@@ -32,7 +33,8 @@ const SelectInput: FC<Props> = ({
     icon,
     required = false,
     options,
-    defaultValue = ""
+    defaultValue = "",
+    performValidation = true
 }) => {
 
     useEffect(() => {
@@ -56,14 +58,16 @@ const SelectInput: FC<Props> = ({
     
     function validate(value: string) {
         setInput(value);
-        const matchedTitle = options.find((option) => value.match(new RegExp(option.title, "gi")));
-        if(!matchedTitle) {
-            onErrorChange && onErrorChange(name, true)
-            setErrorMessage("Required");
-        } else {
-            inputRef.current.value = matchedTitle.value;
-            onErrorChange && onErrorChange(name, false)
-            setErrorMessage("");
+        if(performValidation) {
+            const matchedTitle = options.find((option) => value.match(new RegExp(option.title, "gi")));
+            if(!matchedTitle) {
+                onErrorChange && onErrorChange(name, true)
+                setErrorMessage("Required");
+            } else {
+                inputRef.current.value = matchedTitle.value;
+                onErrorChange && onErrorChange(name, false)
+                setErrorMessage("");
+            }
         }
     }
 
